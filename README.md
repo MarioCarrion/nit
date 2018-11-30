@@ -1,4 +1,8 @@
-# nickpicking
+[![Go Report Card](https://goreportcard.com/badge/github.com/MarioCarrion/nitpicking)](https://goreportcard.com/report/github.com/MarioCarrion/nitpicking)
+[![Circle CI](https://circleci.com/gh/MarioCarrion/nitpicking.svg?style=svg)](https://circleci.com/gh/MarioCarrion/nitpicking)
+[![coverage](https://gocover.io/_badge/github.com/MarioCarrion/nitpicking?0 "coverage")](http://gocover.io/github.com/MarioCarrion/nitpicking)
+
+# nitpicking
 
 I'm nitpicking your code.
 
