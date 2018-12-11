@@ -1,4 +1,4 @@
-[![Go Report Card](https://goreportcard.com/badge/github.com/MarioCarrion/nitpicking)](https://goreportcard.com/report/github.com/MarioCarrion/nitpicking)
+[![Go Report Card](https://goreportcard.com/badge/github.com/MarioCarrion/nitpicking)](https://goreportcard.com/badge/github.com/MarioCarrion/nitpicking)
 [![Circle CI](https://circleci.com/gh/MarioCarrion/nitpicking.svg?style=svg)](https://circleci.com/gh/MarioCarrion/nitpicking)
 [![coverage](https://gocover.io/_badge/github.com/MarioCarrion/nitpicking?0 "coverage")](http://gocover.io/github.com/MarioCarrion/nitpicking)
 
@@ -28,3 +28,7 @@ A really, really nitpicking linter that complains when the code is not organized
    * Must be sorted, exported first, then unexported.
 1. `func` method, is the sixth section
    * Must be sorted by type, exported first, then unexported.
+
+### Development
+
+Requires [`dep`](https://github.com/golang/dep), you can use [retool](https://github.com/twitchtv/retool) for installing that dependency.

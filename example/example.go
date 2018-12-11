@@ -2,11 +2,18 @@
 //nolint
 package example
 
-import (
-	"fmt"
-)
+// import (
+// 	"fmt"
+// )
 
-import "log"
+import (
+	"fmt" // blabla
+	ll "log"
+
+	"github.com/MarioCarrion/nitpicking"
+
+	"github.com/pkg/errors"
+)
 
 const (
 	something = "else"
@@ -27,5 +34,8 @@ type (
 
 func Something() {
 	fmt.Println("vim-go")
-	log.Println("hi")
+	ll.Println("hi")
+
+	fmt.Println(nitpicking.Section(0))
+	fmt.Println(errors.New("bla"))
 }

@@ -2,67 +2,72 @@ package nitpicking
 
 import (
 	"fmt"
+	"go/ast"
+	"go/parser"
+	"go/token"
+
+	"github.com/pkg/errors"
 )
 
 type (
-	// State represents a validation state.
-	State int64
-
-	// Validator represents the nitpicking validator.
-	Validator struct {
-		state State
+	// Nitpicker defines the linter.
+	Nitpicker struct {
+		LocalPath        string
+		fset             *token.FileSet
+		fsm              SectionMachine
+		sectionValidator SectionValidator
 	}
 )
 
-const (
-	// StateStart defines the initial State in the validator.
-	StateStart State = iota
-	// StateImports defines the `import` state.
-	StateImports
-	// StateConsts defines the `const` state.
-	StateConsts
-	// StateTypes defines the `type` state.
-	StateTypes
-	// StateVars defines the `var` state.
-	StateVars
-	// StateFuncs defines the `func` state.
-	StateFuncs
-	// StateMethods defines the `method` state.
-	StateMethods
-)
+// Validate nitpicks the filename.
+func (v *Nitpicker) Validate(filename string) error {
+	v.fset = token.NewFileSet()
+	f, err := parser.ParseFile(v.fset, filename, nil, parser.ParseComments)
+	if err != nil {
+		return nil
+	}
 
-// Transition updates the validator's internal state.
-func (v *Validator) Transition(next State) error { //nolint:gocyclo
-	switch v.state {
-	case StateStart:
-		if next != StateImports {
-			return fmt.Errorf("next section must be: `imports`")
-		}
-	case StateImports:
-		if next != StateConsts {
-			return fmt.Errorf("next section must be: `const`")
-		}
-	case StateConsts:
-		if next != StateTypes && next != StateConsts {
-			return fmt.Errorf("next section must be either: `const` or `type`")
-		}
-	case StateTypes:
-		if next != StateVars {
-			return fmt.Errorf("next section must be: `vars`")
-		}
-	case StateVars:
-		if next != StateFuncs {
-			return fmt.Errorf("next section must be: functions")
-		}
-	case StateFuncs:
-		if next != StateMethods && next != StateFuncs {
-			return fmt.Errorf("next section must be: functions or methods")
-		}
-	case StateMethods:
-		if next != StateMethods {
-			return fmt.Errorf("next section must be: methods")
+	for _, s := range f.Decls {
+		// fmt.Printf("%d == %T - %+v -- %t\n", v.fset.PositionFor(s.Pos(), false).Line, s, s, s.End().IsValid())
+		if err := v.validateToken(s); err != nil {
+			return err
 		}
 	}
-	v.state = next
+	return nil
+}
+
+func (v *Nitpicker) validateToken(d ast.Decl) error {
+	var (
+		err       error
+		genDecl   *ast.GenDecl
+		funcDecl  *ast.FuncDecl
+		nextState Section
+	)
+
+	switch t := d.(type) {
+	case *ast.GenDecl:
+		genDecl = t
+		nextState, err = NewGenDeclState(genDecl)
+	case *ast.FuncDecl:
+		funcDecl = t
+		nextState, err = NewFuncDeclState(funcDecl)
+	default:
+		return fmt.Errorf("unknown declaration state")
+	}
+	if err != nil {
+		return err
+	}
+
+	if err = v.fsm.Transition(nextState); err != nil {
+		return errors.Wrap(err, v.fset.PositionFor(d.Pos(), false).String())
+	}
+
+	if nextState == SectionImports {
+		v.sectionValidator = &Imports{LocalPath: v.LocalPath}
+		if err := v.sectionValidator.Validate(genDecl, v.fset); err != nil {
+			return err
+		}
+	}
+
 	return nil
 }
