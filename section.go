@@ -5,8 +5,6 @@ import (
 	"go/ast"
 	"go/token"
 	"strings"
-
-	"github.com/pkg/errors"
 )
 
 type (
@@ -15,19 +13,6 @@ type (
 
 	// ImportsSection represents an `imports` section
 	ImportsSection uint8
-
-	// SectionValidator FIXME
-	SectionValidator interface {
-		//		IsValid(d ast.Decl) bool
-		// Validate(*ast.GenDecl) error
-		Validate(v *ast.GenDecl, fset *token.FileSet) error
-	}
-
-	// Imports FIXME
-	Imports struct {
-		LocalPath string
-		fsm       *ImportsSectionMachine
-	}
 )
 
 const (
@@ -56,8 +41,8 @@ const (
 	ImportsSectionLocal
 )
 
-// NewGenDeclState returns a new State that matches the decl type.
-func NewGenDeclState(decl *ast.GenDecl) (Section, error) {
+// NewGenDeclSection returns a new State that matches the decl type.
+func NewGenDeclSection(decl *ast.GenDecl) (Section, error) {
 	switch decl.Tok {
 	case token.IMPORT:
 		return SectionImports, nil
@@ -72,8 +57,8 @@ func NewGenDeclState(decl *ast.GenDecl) (Section, error) {
 	return SectionStart, fmt.Errorf("unknown generic declaration node")
 }
 
-// NewFuncDeclState returns a new State that matches the decl type.
-func NewFuncDeclState(decl *ast.FuncDecl) (Section, error) {
+// NewFuncDeclSection returns a new State that matches the decl type.
+func NewFuncDeclSection(decl *ast.FuncDecl) (Section, error) {
 	if decl.Recv == nil {
 		return SectionFuncs, nil
 	}
@@ -89,47 +74,4 @@ func NewImportsSection(path, localPathPrefix string) ImportsSection {
 		return ImportsSectionLocal
 	}
 	return ImportsSectionExternal
-}
-
-// Validate validates the token according to the imports rules.
-func (i *Imports) Validate(v *ast.GenDecl, fset *token.FileSet) error {
-	if !v.Lparen.IsValid() {
-		return errors.Wrap(fmt.Errorf("expected parenthesized declaration"), fset.PositionFor(v.Pos(), false).String())
-	}
-
-	lastLine := fset.PositionFor(v.Pos(), false).Line
-
-	for _, t := range v.Specs {
-		errPrefix := fset.PositionFor(t.Pos(), false).String()
-
-		s, ok := t.(*ast.ImportSpec)
-		if !ok {
-			return errors.Wrap(fmt.Errorf("invalid token %+v", t), errPrefix)
-		}
-
-		section := NewImportsSection(s.Path.Value, i.LocalPath)
-		if i.fsm == nil {
-			i.fsm = NewImportsSectionMachine(section)
-		}
-		if err := i.fsm.Transition(section); err != nil {
-			return errors.Wrap(err, errPrefix)
-		}
-
-		newLine := fset.PositionFor(t.Pos(), false).Line
-
-		if i.fsm.Current() == i.fsm.Previous() {
-			if lastLine+1 != newLine {
-				return errors.Wrap(errors.New("extra line break in section"), errPrefix)
-			}
-		} else {
-			if lastLine+1 == newLine {
-				return errors.Wrap(errors.New("missing line break in section"), errPrefix)
-			}
-		}
-
-		lastLine = newLine
-	}
-
-	return nil
-
 }

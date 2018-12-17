@@ -12,10 +12,9 @@ import (
 type (
 	// Nitpicker defines the linter.
 	Nitpicker struct {
-		LocalPath        string
-		fset             *token.FileSet
-		fsm              SectionMachine
-		sectionValidator SectionValidator
+		LocalPath string
+		fset      *token.FileSet
+		fsm       SectionMachine
 	}
 )
 
@@ -47,10 +46,10 @@ func (v *Nitpicker) validateToken(d ast.Decl) error {
 	switch t := d.(type) {
 	case *ast.GenDecl:
 		genDecl = t
-		nextState, err = NewGenDeclState(genDecl)
+		nextState, err = NewGenDeclSection(genDecl)
 	case *ast.FuncDecl:
 		funcDecl = t
-		nextState, err = NewFuncDeclState(funcDecl)
+		nextState, err = NewFuncDeclSection(funcDecl)
 	default:
 		return fmt.Errorf("unknown declaration state")
 	}
@@ -63,8 +62,8 @@ func (v *Nitpicker) validateToken(d ast.Decl) error {
 	}
 
 	if nextState == SectionImports {
-		v.sectionValidator = &Imports{LocalPath: v.LocalPath}
-		if err := v.sectionValidator.Validate(genDecl, v.fset); err != nil {
+		validator := &ImportsValidator{LocalPath: v.LocalPath}
+		if err := validator.Validate(genDecl, v.fset); err != nil {
 			return err
 		}
 	}

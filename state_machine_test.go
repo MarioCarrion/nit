@@ -6,6 +6,24 @@ import (
 	"github.com/MarioCarrion/nitpicking"
 )
 
+func TestImportsSectionMachine_Current(t *testing.T) {
+	i := nitpicking.NewImportsSectionMachine(nitpicking.ImportsSectionStd)
+	if i.Current() != nitpicking.ImportsSectionStd {
+		t.Fatalf("expected current value does not match")
+	}
+}
+
+func TestImportsSectionMachine_Previous(t *testing.T) {
+	i := nitpicking.NewImportsSectionMachine(nitpicking.ImportsSectionStd)
+	if err := i.Transition(nitpicking.ImportsSectionLocal); err != nil {
+		t.Fatalf("expected no error, got %s", err)
+	}
+
+	if i.Previous() != nitpicking.ImportsSectionStd {
+		t.Fatalf("expected current value does not match")
+	}
+}
+
 func TestImportsSectionMachine_Transition(t *testing.T) {
 	tests := [...]struct {
 		name          string
