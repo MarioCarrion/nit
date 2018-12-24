@@ -1,33 +1,52 @@
 package main
 
 import (
+	"flag"
 	"fmt"
+	"go/build"
 	"os"
+	"path/filepath"
 
 	"github.com/MarioCarrion/nitpicking"
 )
 
 func main() {
-	// fset := token.NewFileSet()
+	//nolint: errcheck
+	flag.Usage = func() {
+		fmt.Fprintf(os.Stderr, "Usage of %s:\n", os.Args[0])
+		fmt.Fprintf(os.Stderr, "\n%s [packages]\n", os.Args[0])
+		fmt.Fprintf(os.Stderr, "\nFlags:\n")
+		flag.PrintDefaults()
+	}
 
-	// v := nitpicking.Nitpicker{FileSet: fset}
-	v := nitpicking.Nitpicker{LocalPath: "github.com/MarioCarrion/nitpicking"}
-	if err := v.Validate("example/example.go"); err != nil {
-		fmt.Println(err)
+	localPkg := flag.String("pkg", "", "local package")
+	flag.Parse()
+
+	if len(flag.Args()) == 0 {
+		fmt.Println("missing packages")
 		os.Exit(1)
 	}
 
-	// f, err := parser.ParseFile(fset, "example/example.go", nil, 0)
-	// if err != nil {
-	// 	log.Fatalf("parsing error failed %s\n", err)
-	// }
+	for _, pkg := range flag.Args() {
+		p, err := build.Import(pkg, ".", 0)
+		if err != nil {
+			fmt.Printf("error importing %s\n", pkg)
+			os.Exit(1)
+		}
 
-	// for _, s := range f.Decls {
-	// 	fmt.Printf("%d == %T - %+v -- %t\n", fset.PositionFor(s.Pos(), false).Line, s, s, s.End().IsValid())
+		var failed bool
 
-	// 	if err := v.Validate(s); err != nil {
-	// 		pos := fset.PositionFor(s.Pos(), false)
-	// 		log.Fatalf("%s section `%s` is invalid: %s", pos.String(), v.LastTokenKind, err)
-	// 	}
-	// }
+		for _, f := range p.GoFiles {
+			fullpath := filepath.Join(p.Dir, f)
+			v := nitpicking.Nitpicker{LocalPath: *localPkg}
+			if err := v.Validate(fullpath); err != nil {
+				failed = true
+				fmt.Println(err)
+			}
+		}
+
+		if failed {
+			os.Exit(1)
+		}
+	}
 }

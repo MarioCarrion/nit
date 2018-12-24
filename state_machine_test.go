@@ -92,14 +92,17 @@ func TestSectionMachine_Transition(t *testing.T) {
 			func() nitpicking.SectionMachine {
 				return nitpicking.SectionMachine{}
 			},
-			[]nitpicking.Section{nitpicking.SectionImports},
 			[]nitpicking.Section{
-				nitpicking.SectionStart,
+				nitpicking.SectionImports,
 				nitpicking.SectionConsts,
 				nitpicking.SectionTypes,
 				nitpicking.SectionVars,
 				nitpicking.SectionFuncs,
 				nitpicking.SectionMethods,
+			},
+			[]nitpicking.Section{
+				nitpicking.Section(99),
+				nitpicking.SectionStart,
 			},
 		},
 		{
@@ -109,14 +112,16 @@ func TestSectionMachine_Transition(t *testing.T) {
 				v.Transition(nitpicking.SectionImports)
 				return v
 			},
-			[]nitpicking.Section{nitpicking.SectionConsts},
 			[]nitpicking.Section{
-				nitpicking.SectionStart,
-				nitpicking.SectionImports,
+				nitpicking.SectionConsts,
 				nitpicking.SectionTypes,
 				nitpicking.SectionVars,
 				nitpicking.SectionFuncs,
 				nitpicking.SectionMethods,
+			},
+			[]nitpicking.Section{
+				nitpicking.SectionStart,
+				nitpicking.SectionImports,
 			},
 		},
 		{
@@ -128,15 +133,15 @@ func TestSectionMachine_Transition(t *testing.T) {
 				return v
 			},
 			[]nitpicking.Section{
-				nitpicking.SectionTypes,
 				nitpicking.SectionConsts,
+				nitpicking.SectionTypes,
+				nitpicking.SectionVars,
+				nitpicking.SectionFuncs,
+				nitpicking.SectionMethods,
 			},
 			[]nitpicking.Section{
 				nitpicking.SectionStart,
 				nitpicking.SectionImports,
-				nitpicking.SectionVars,
-				nitpicking.SectionFuncs,
-				nitpicking.SectionMethods,
 			},
 		},
 		{
@@ -150,14 +155,14 @@ func TestSectionMachine_Transition(t *testing.T) {
 			},
 			[]nitpicking.Section{
 				nitpicking.SectionVars,
+				nitpicking.SectionFuncs,
+				nitpicking.SectionMethods,
 			},
 			[]nitpicking.Section{
 				nitpicking.SectionStart,
 				nitpicking.SectionImports,
 				nitpicking.SectionTypes,
 				nitpicking.SectionConsts,
-				nitpicking.SectionFuncs,
-				nitpicking.SectionMethods,
 			},
 		},
 		{
@@ -172,14 +177,14 @@ func TestSectionMachine_Transition(t *testing.T) {
 			},
 			[]nitpicking.Section{
 				nitpicking.SectionFuncs,
+				nitpicking.SectionMethods,
 			},
 			[]nitpicking.Section{
 				nitpicking.SectionStart,
 				nitpicking.SectionImports,
-				nitpicking.SectionConsts,
 				nitpicking.SectionTypes,
 				nitpicking.SectionVars,
-				nitpicking.SectionMethods,
+				nitpicking.SectionConsts,
 			},
 		},
 		{
@@ -236,14 +241,14 @@ func TestSectionMachine_Transition(t *testing.T) {
 			for _, s := range tt.validStates {
 				validator := tt.factory()
 				if err := validator.Transition(s); err != nil {
-					t.Fatalf("expected no error, got %s", err)
+					ts.Fatalf("expected no error, got %s", err)
 				}
 			}
 
 			for _, s := range tt.invalidStates {
 				validator := tt.factory()
 				if err := validator.Transition(s); err == nil {
-					t.Fatalf("expected error, got nil")
+					ts.Fatalf("expected error, got nil")
 				}
 			}
 		})

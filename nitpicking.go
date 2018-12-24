@@ -23,7 +23,7 @@ func (v *Nitpicker) Validate(filename string) error {
 	v.fset = token.NewFileSet()
 	f, err := parser.ParseFile(v.fset, filename, nil, parser.ParseComments)
 	if err != nil {
-		return nil
+		return errors.Wrap(err, "parsing file failed")
 	}
 
 	for _, s := range f.Decls {

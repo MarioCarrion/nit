@@ -55,28 +55,20 @@ func (s *ImportsSectionMachine) Transition(next ImportsSection) error {
 func (v *SectionMachine) Transition(next Section) error { //nolint:gocyclo
 	switch v.current {
 	case SectionStart:
-		if next != SectionImports {
-			return fmt.Errorf("next section must be: `imports`")
+		if next != SectionImports && next != SectionConsts && next != SectionTypes && next != SectionVars && next != SectionFuncs && next != SectionMethods {
+			return fmt.Errorf("next section is invalid")
 		}
-	case SectionImports:
-		if next != SectionConsts {
-			return fmt.Errorf("next section must be: `const`")
-		}
-	case SectionConsts:
-		if next != SectionTypes && next != SectionConsts {
-			return fmt.Errorf("next section must be either: `const` or `type`")
+	case SectionImports, SectionConsts:
+		if next != SectionConsts && next != SectionTypes && next != SectionVars && next != SectionFuncs && next != SectionMethods {
+			return fmt.Errorf("next section must either: `const`, `type`, `var` or funcs/methods")
 		}
 	case SectionTypes:
-		if next != SectionVars {
-			return fmt.Errorf("next section must be: `vars`")
+		if next != SectionVars && next != SectionFuncs && next != SectionMethods {
+			return fmt.Errorf("next section must either: `var` or funcs/methods")
 		}
-	case SectionVars:
-		if next != SectionFuncs {
-			return fmt.Errorf("next section must be: functions")
-		}
-	case SectionFuncs:
-		if next != SectionMethods && next != SectionFuncs {
-			return fmt.Errorf("next section must be: functions or methods")
+	case SectionVars, SectionFuncs:
+		if next != SectionFuncs && next != SectionMethods {
+			return fmt.Errorf("next section must either: funcs or methods")
 		}
 	case SectionMethods:
 		if next != SectionMethods {
