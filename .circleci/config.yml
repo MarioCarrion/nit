@@ -17,7 +17,7 @@ jobs:
       CGO_ENABLED: 0
     steps:
       - checkout
-      - run: gometalinter --skip=vendor --enable-all --config=.gometalinter.json ./...
+      - run: gometalinter --skip=vendor --skip=testdata --enable-all --config=.gometalinter.json ./...
 
 workflows:
   version: 2
