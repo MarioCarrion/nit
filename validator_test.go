@@ -17,6 +17,11 @@ func TestImportsValidator_Validate(t *testing.T) {
 		expectedError bool
 	}{
 		{
+			"OK",
+			"imports_valid.go",
+			false,
+		},
+		{
 			"Error: parenthesized declaration",
 			"imports_paren.go",
 			true,
