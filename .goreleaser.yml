@@ -1,0 +1,29 @@
+project_name: nitpicking
+before:
+  hooks:
+builds:
+  -
+    main: ./cmd/nitpicking/main.go
+    binary: nitpicking
+  - env:
+    - CGO_ENABLED=0
+archive:
+  replacements:
+    darwin: Darwin
+    linux: Linux
+    windows: Windows
+    386: i386
+    amd64: x86_64
+  files:
+    - README.md
+    - LICENSE
+checksum:
+  name_template: 'checksums.txt'
+snapshot:
+  name_template: "{{ .Tag }}-next"
+changelog:
+  sort: asc
+  filters:
+    exclude:
+    - '^docs:'
+    - '^test:'

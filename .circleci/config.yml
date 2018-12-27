@@ -18,6 +18,12 @@ jobs:
     steps:
       - checkout
       - run: gometalinter --skip=vendor --skip=testdata --enable-all --config=.gometalinter.json ./...
+  release:
+    docker:
+      - image: circleci/golang:1.11.2
+    steps:
+      - checkout
+      - run: curl -sL https://git.io/goreleaser | bash
 
 workflows:
   version: 2
@@ -25,3 +31,11 @@ workflows:
     jobs:
       - test
       - lint
+  release:
+    jobs:
+      - release:
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /v[0-9]+(\.[0-9]+)*(-.*)*/

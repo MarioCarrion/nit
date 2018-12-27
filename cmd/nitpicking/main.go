@@ -10,17 +10,30 @@ import (
 	"github.com/MarioCarrion/nitpicking"
 )
 
+//nolint: gochecknoglobals
+var (
+	version = "dev"
+	commit  = "none"
+	date    = "unknown"
+)
+
 func main() {
 	//nolint: errcheck
 	flag.Usage = func() {
 		fmt.Fprintf(os.Stderr, "Usage of %s:\n", os.Args[0])
 		fmt.Fprintf(os.Stderr, "\n%s [packages]\n", os.Args[0])
-		fmt.Fprintf(os.Stderr, "\nFlags:\n")
 		flag.PrintDefaults()
 	}
 
 	localPkg := flag.String("pkg", "", "local package")
+	showVersion := flag.Bool("version", false, "prints current version information")
+
 	flag.Parse()
+
+	if *showVersion {
+		fmt.Printf("%v, commit %v, built at %v", version, commit, date)
+		os.Exit(0)
+	}
 
 	if len(flag.Args()) == 0 {
 		fmt.Println("missing packages")
