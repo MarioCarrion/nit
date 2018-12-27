@@ -1,3 +1,10 @@
 {
-  "Disable": ["lll", "test"]
+  "Disable": ["lll", "test"],
+  "Linters": {
+    "nit": {
+      "Command": "nit -pkg github.com/MarioCarrion/",
+      "Pattern": "PATH:LINE:MESSAGE",
+      "PartitionStrategy": "packages"
+    }
+  }
 }
