@@ -21,6 +21,7 @@ jobs:
   release:
     docker:
       - image: circleci/golang:1.11.2
+    working_directory: /go/src/github.com/MarioCarrion/nitpicking
     steps:
       - checkout
       - run: curl -sL https://git.io/goreleaser | bash

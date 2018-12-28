@@ -5,8 +5,8 @@ builds:
   -
     main: ./cmd/nitpicking/main.go
     binary: nitpicking
-  - env:
-    - CGO_ENABLED=0
+    env:
+      - CGO_ENABLED=0
 archive:
   replacements:
     darwin: Darwin
