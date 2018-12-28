@@ -1,14 +1,14 @@
-# nitpicking
+# nit
 
-[![Go Report Card](https://goreportcard.com/badge/github.com/MarioCarrion/nitpicking)](https://goreportcard.com/report/github.com/MarioCarrion/nitpicking)
-[![Circle CI](https://circleci.com/gh/MarioCarrion/nitpicking.svg?style=svg)](https://circleci.com/gh/MarioCarrion/nitpicking)
-[![coverage](https://gocover.io/_badge/github.com/MarioCarrion/nitpicking?0 "coverage")](http://gocover.io/github.com/MarioCarrion/nitpicking)
+[![Go Report Card](https://goreportcard.com/badge/github.com/MarioCarrion/nit)](https://goreportcard.com/report/github.com/MarioCarrion/nit)
+[![Circle CI](https://circleci.com/gh/MarioCarrion/nit.svg?style=svg)](https://circleci.com/gh/MarioCarrion/nit)
+[![coverage](https://gocover.io/_badge/github.com/MarioCarrion/nit?0 "coverage")](http://gocover.io/github.com/MarioCarrion/nit)
 
 I'm nitpicking your code.
 
 ## What is this?
 
-A really, really nitpicking linter that complains when the code is not organized according to the following very opinionated rules:
+A really, really nit linter that complains when the code is not organized according to the following very opinionated rules:
 
 1. `imports` is the first section
    * Requires section declaration,

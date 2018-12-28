@@ -1,4 +1,4 @@
-package nitpicking_test
+package nit_test
 
 import (
 	"go/ast"
@@ -7,7 +7,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/MarioCarrion/nitpicking"
+	"github.com/MarioCarrion/nit"
 )
 
 func TestImportsValidator_Validate(t *testing.T) {
@@ -55,7 +55,7 @@ func TestImportsValidator_Validate(t *testing.T) {
 				switch g := s.(type) {
 				case *ast.GenDecl:
 					if g.Tok == token.IMPORT {
-						validator := nitpicking.ImportsValidator{LocalPath: "github.com/MarioCarrion"}
+						validator := nit.ImportsValidator{LocalPath: "github.com/MarioCarrion"}
 						if err := validator.Validate(g, fset); tt.expectedError != (err != nil) {
 							ts.Fatalf("expected error %t, got %s", tt.expectedError, err)
 						}

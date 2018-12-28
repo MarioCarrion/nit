@@ -1,10 +1,10 @@
-package nitpicking_test
+package nit_test
 
 import (
 	"path/filepath"
 	"testing"
 
-	"github.com/MarioCarrion/nitpicking"
+	"github.com/MarioCarrion/nit"
 )
 
 func TestNitpicker_Validate(t *testing.T) {
@@ -22,7 +22,7 @@ func TestNitpicker_Validate(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(ts *testing.T) {
-			n := nitpicking.Nitpicker{}
+			n := nit.Nitpicker{}
 
 			if err := n.Validate(filepath.Join("testdata", tt.filename)); tt.expectedError != (err != nil) {
 

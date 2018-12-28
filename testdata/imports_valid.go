@@ -5,7 +5,7 @@ import (
 
 	"github.com/pkg/errors"
 
-	"github.com/MarioCarrion/nitpicking"
+	"github.com/MarioCarrion/nit"
 )
 
 func ImportsValid() {

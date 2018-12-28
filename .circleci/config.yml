@@ -4,7 +4,7 @@ jobs:
   test:
     docker:
       - image: circleci/golang:1.11.2
-    working_directory: /go/src/github.com/MarioCarrion/nitpicking
+    working_directory: /go/src/github.com/MarioCarrion/nit
     steps:
       - checkout
       - run: go get -v -t -d ./...
@@ -12,7 +12,7 @@ jobs:
   lint:
     docker:
       - image: supinf/gometalinter:latest
-    working_directory: /go/src/github.com/MarioCarrion/nitpicking
+    working_directory: /go/src/github.com/MarioCarrion/nit
     environment:
       CGO_ENABLED: 0
     steps:
@@ -21,7 +21,7 @@ jobs:
   release:
     docker:
       - image: circleci/golang:1.11.2
-    working_directory: /go/src/github.com/MarioCarrion/nitpicking
+    working_directory: /go/src/github.com/MarioCarrion/nit
     steps:
       - checkout
       - run: curl -sL https://git.io/goreleaser | bash

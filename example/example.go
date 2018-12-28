@@ -10,7 +10,7 @@ import (
 	"fmt" // blabla
 	ll "log"
 
-	"github.com/MarioCarrion/nitpicking"
+	"github.com/MarioCarrion/nit"
 
 	"github.com/pkg/errors"
 )
@@ -36,6 +36,6 @@ func Something() {
 	fmt.Println("vim-go")
 	ll.Println("hi")
 
-	fmt.Println(nitpicking.Section(0))
+	fmt.Println(nit.Section(0))
 	fmt.Println(errors.New("bla"))
 }

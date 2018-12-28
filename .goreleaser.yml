@@ -1,10 +1,10 @@
-project_name: nitpicking
+project_name: nit
 before:
   hooks:
 builds:
   -
-    main: ./cmd/nitpicking/main.go
-    binary: nitpicking
+    main: ./cmd/nit/main.go
+    binary: nit
     env:
       - CGO_ENABLED=0
 archive:

@@ -7,7 +7,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/MarioCarrion/nitpicking"
+	"github.com/MarioCarrion/nit"
 )
 
 //nolint: gochecknoglobals
@@ -51,7 +51,7 @@ func main() {
 
 		for _, f := range p.GoFiles {
 			fullpath := filepath.Join(p.Dir, f)
-			v := nitpicking.Nitpicker{LocalPath: *localPkg}
+			v := nit.Nitpicker{LocalPath: *localPkg}
 			if err := v.Validate(fullpath); err != nil {
 				failed = true
 				fmt.Println(err)

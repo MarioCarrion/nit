@@ -1,55 +1,55 @@
-package nitpicking_test
+package nit_test
 
 import (
 	"go/ast"
 	"go/token"
 	"testing"
 
-	"github.com/MarioCarrion/nitpicking"
+	"github.com/MarioCarrion/nit"
 )
 
 func TestNewGenDeclSection(t *testing.T) {
 	tests := [...]struct {
 		name          string
 		input         *ast.GenDecl
-		expected      nitpicking.Section
+		expected      nit.Section
 		expectedError bool
 	}{
 		{
 			"Imports",
 			&ast.GenDecl{Tok: token.IMPORT},
-			nitpicking.SectionImports,
+			nit.SectionImports,
 			false,
 		},
 		{
 			"Consts",
 			&ast.GenDecl{Tok: token.CONST},
-			nitpicking.SectionConsts,
+			nit.SectionConsts,
 			false,
 		},
 		{
 			"Type",
 			&ast.GenDecl{Tok: token.TYPE},
-			nitpicking.SectionTypes,
+			nit.SectionTypes,
 			false,
 		},
 		{
 			"Vars",
 			&ast.GenDecl{Tok: token.VAR},
-			nitpicking.SectionVars,
+			nit.SectionVars,
 			false,
 		},
 		{
 			"Error",
 			&ast.GenDecl{Tok: token.COMMENT},
-			nitpicking.SectionStart,
+			nit.SectionStart,
 			true,
 		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(ts *testing.T) {
-			actual, err := nitpicking.NewGenDeclSection(tt.input)
+			actual, err := nit.NewGenDeclSection(tt.input)
 			if (err != nil) != tt.expectedError {
 				ts.Fatalf("expected no error, got %s", err)
 			}
@@ -64,23 +64,23 @@ func TestNewFuncDeclSection(t *testing.T) {
 	tests := [...]struct {
 		name     string
 		input    *ast.FuncDecl
-		expected nitpicking.Section
+		expected nit.Section
 	}{
 		{
 			"Funcs",
 			&ast.FuncDecl{},
-			nitpicking.SectionFuncs,
+			nit.SectionFuncs,
 		},
 		{
 			"Methods",
 			&ast.FuncDecl{Recv: &ast.FieldList{}},
-			nitpicking.SectionMethods,
+			nit.SectionMethods,
 		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(ts *testing.T) {
-			actual, err := nitpicking.NewFuncDeclSection(tt.input)
+			actual, err := nit.NewFuncDeclSection(tt.input)
 			if err != nil {
 				ts.Fatalf("expected no error, got %s", err)
 			}
@@ -96,31 +96,31 @@ func TestNewImportsSection(t *testing.T) {
 		name                string
 		inputPath           string
 		inputLocaBasePrefix string
-		expected            nitpicking.ImportsSection
+		expected            nit.ImportsSection
 	}{
 		{
 			"ImportsSectionStd",
 			"fmt",
-			"github.com/MarioCarrion/nitpicking",
-			nitpicking.ImportsSectionStd,
+			"github.com/MarioCarrion/nit",
+			nit.ImportsSectionStd,
 		},
 		{
 			"ImportsSectionExternal",
 			"github.com/golang/go",
-			"github.com/MarioCarrion/nitpicking",
-			nitpicking.ImportsSectionExternal,
+			"github.com/MarioCarrion/nit",
+			nit.ImportsSectionExternal,
 		},
 		{
 			"ImportsSectionLocal",
-			"github.com/MarioCarrion/nitpicking/something",
-			"github.com/MarioCarrion/nitpicking",
-			nitpicking.ImportsSectionLocal,
+			"github.com/MarioCarrion/nit/something",
+			"github.com/MarioCarrion/nit",
+			nit.ImportsSectionLocal,
 		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(ts *testing.T) {
-			if actual := nitpicking.NewImportsSection(tt.inputPath, tt.inputLocaBasePrefix); actual != tt.expected {
+			if actual := nit.NewImportsSection(tt.inputPath, tt.inputLocaBasePrefix); actual != tt.expected {
 				t.Fatalf("expected %+v, actual %+v", tt.expected, actual)
 			}
 		})

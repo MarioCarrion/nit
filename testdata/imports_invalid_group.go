@@ -3,7 +3,7 @@ package testdata
 import (
 	"fmt"
 
-	"github.com/MarioCarrion/nitpicking"
+	"github.com/MarioCarrion/nit"
 	"github.com/pkg/errors"
 )
 

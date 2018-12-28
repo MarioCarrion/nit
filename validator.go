@@ -1,4 +1,4 @@
-package nitpicking
+package nit
 
 import (
 	"fmt"

@@ -1,25 +1,25 @@
-package nitpicking_test
+package nit_test
 
 import (
 	"testing"
 
-	"github.com/MarioCarrion/nitpicking"
+	"github.com/MarioCarrion/nit"
 )
 
 func TestImportsSectionMachine_Current(t *testing.T) {
-	i := nitpicking.NewImportsSectionMachine(nitpicking.ImportsSectionStd)
-	if i.Current() != nitpicking.ImportsSectionStd {
+	i := nit.NewImportsSectionMachine(nit.ImportsSectionStd)
+	if i.Current() != nit.ImportsSectionStd {
 		t.Fatalf("expected current value does not match")
 	}
 }
 
 func TestImportsSectionMachine_Previous(t *testing.T) {
-	i := nitpicking.NewImportsSectionMachine(nitpicking.ImportsSectionStd)
-	if err := i.Transition(nitpicking.ImportsSectionLocal); err != nil {
+	i := nit.NewImportsSectionMachine(nit.ImportsSectionStd)
+	if err := i.Transition(nit.ImportsSectionLocal); err != nil {
 		t.Fatalf("expected no error, got %s", err)
 	}
 
-	if i.Previous() != nitpicking.ImportsSectionStd {
+	if i.Previous() != nit.ImportsSectionStd {
 		t.Fatalf("expected current value does not match")
 	}
 }
@@ -27,36 +27,36 @@ func TestImportsSectionMachine_Previous(t *testing.T) {
 func TestImportsSectionMachine_Transition(t *testing.T) {
 	tests := [...]struct {
 		name          string
-		startState    nitpicking.ImportsSection
-		validStates   []nitpicking.ImportsSection
-		invalidStates []nitpicking.ImportsSection
+		startState    nit.ImportsSection
+		validStates   []nit.ImportsSection
+		invalidStates []nit.ImportsSection
 	}{
 		{
 			"Standard",
-			nitpicking.ImportsSectionStd,
-			[]nitpicking.ImportsSection{
-				nitpicking.ImportsSectionStd,
-				nitpicking.ImportsSectionExternal,
-				nitpicking.ImportsSectionLocal,
+			nit.ImportsSectionStd,
+			[]nit.ImportsSection{
+				nit.ImportsSectionStd,
+				nit.ImportsSectionExternal,
+				nit.ImportsSectionLocal,
 			},
-			[]nitpicking.ImportsSection{},
+			[]nit.ImportsSection{},
 		},
 		{
 			"External",
-			nitpicking.ImportsSectionExternal,
-			[]nitpicking.ImportsSection{
-				nitpicking.ImportsSectionExternal,
-				nitpicking.ImportsSectionLocal,
+			nit.ImportsSectionExternal,
+			[]nit.ImportsSection{
+				nit.ImportsSectionExternal,
+				nit.ImportsSectionLocal,
 			},
-			[]nitpicking.ImportsSection{nitpicking.ImportsSectionStd},
+			[]nit.ImportsSection{nit.ImportsSectionStd},
 		},
 		{
 			"Local",
-			nitpicking.ImportsSectionLocal,
-			[]nitpicking.ImportsSection{nitpicking.ImportsSectionLocal},
-			[]nitpicking.ImportsSection{
-				nitpicking.ImportsSectionStd,
-				nitpicking.ImportsSectionExternal,
+			nit.ImportsSectionLocal,
+			[]nit.ImportsSection{nit.ImportsSectionLocal},
+			[]nit.ImportsSection{
+				nit.ImportsSectionStd,
+				nit.ImportsSectionExternal,
 			},
 		},
 	}
@@ -64,14 +64,14 @@ func TestImportsSectionMachine_Transition(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(ts *testing.T) {
 			for _, s := range tt.validStates {
-				machine := nitpicking.NewImportsSectionMachine(tt.startState)
+				machine := nit.NewImportsSectionMachine(tt.startState)
 				if err := machine.Transition(s); err != nil {
 					t.Fatalf("expected no error, to %s", err)
 				}
 			}
 
 			for _, s := range tt.invalidStates {
-				machine := nitpicking.NewImportsSectionMachine(tt.startState)
+				machine := nit.NewImportsSectionMachine(tt.startState)
 				if err := machine.Transition(s); err == nil {
 					t.Fatalf("expected error, got nil")
 				}
@@ -83,155 +83,155 @@ func TestImportsSectionMachine_Transition(t *testing.T) {
 func TestSectionMachine_Transition(t *testing.T) {
 	tests := [...]struct {
 		name          string
-		factory       func() nitpicking.SectionMachine
-		validStates   []nitpicking.Section
-		invalidStates []nitpicking.Section
+		factory       func() nit.SectionMachine
+		validStates   []nit.Section
+		invalidStates []nit.Section
 	}{
 		{
 			"Start",
-			func() nitpicking.SectionMachine {
-				return nitpicking.SectionMachine{}
+			func() nit.SectionMachine {
+				return nit.SectionMachine{}
 			},
-			[]nitpicking.Section{
-				nitpicking.SectionImports,
-				nitpicking.SectionConsts,
-				nitpicking.SectionTypes,
-				nitpicking.SectionVars,
-				nitpicking.SectionFuncs,
-				nitpicking.SectionMethods,
+			[]nit.Section{
+				nit.SectionImports,
+				nit.SectionConsts,
+				nit.SectionTypes,
+				nit.SectionVars,
+				nit.SectionFuncs,
+				nit.SectionMethods,
 			},
-			[]nitpicking.Section{
-				nitpicking.Section(99),
-				nitpicking.SectionStart,
+			[]nit.Section{
+				nit.Section(99),
+				nit.SectionStart,
 			},
 		},
 		{
 			"Imports",
-			func() nitpicking.SectionMachine {
-				v := nitpicking.SectionMachine{}
-				v.Transition(nitpicking.SectionImports)
+			func() nit.SectionMachine {
+				v := nit.SectionMachine{}
+				v.Transition(nit.SectionImports)
 				return v
 			},
-			[]nitpicking.Section{
-				nitpicking.SectionConsts,
-				nitpicking.SectionTypes,
-				nitpicking.SectionVars,
-				nitpicking.SectionFuncs,
-				nitpicking.SectionMethods,
+			[]nit.Section{
+				nit.SectionConsts,
+				nit.SectionTypes,
+				nit.SectionVars,
+				nit.SectionFuncs,
+				nit.SectionMethods,
 			},
-			[]nitpicking.Section{
-				nitpicking.SectionStart,
-				nitpicking.SectionImports,
+			[]nit.Section{
+				nit.SectionStart,
+				nit.SectionImports,
 			},
 		},
 		{
 			"Consts",
-			func() nitpicking.SectionMachine {
-				v := nitpicking.SectionMachine{}
-				v.Transition(nitpicking.SectionImports)
-				v.Transition(nitpicking.SectionConsts)
+			func() nit.SectionMachine {
+				v := nit.SectionMachine{}
+				v.Transition(nit.SectionImports)
+				v.Transition(nit.SectionConsts)
 				return v
 			},
-			[]nitpicking.Section{
-				nitpicking.SectionConsts,
-				nitpicking.SectionTypes,
-				nitpicking.SectionVars,
-				nitpicking.SectionFuncs,
-				nitpicking.SectionMethods,
+			[]nit.Section{
+				nit.SectionConsts,
+				nit.SectionTypes,
+				nit.SectionVars,
+				nit.SectionFuncs,
+				nit.SectionMethods,
 			},
-			[]nitpicking.Section{
-				nitpicking.SectionStart,
-				nitpicking.SectionImports,
+			[]nit.Section{
+				nit.SectionStart,
+				nit.SectionImports,
 			},
 		},
 		{
 			"Types",
-			func() nitpicking.SectionMachine {
-				v := nitpicking.SectionMachine{}
-				v.Transition(nitpicking.SectionImports)
-				v.Transition(nitpicking.SectionConsts)
-				v.Transition(nitpicking.SectionTypes)
+			func() nit.SectionMachine {
+				v := nit.SectionMachine{}
+				v.Transition(nit.SectionImports)
+				v.Transition(nit.SectionConsts)
+				v.Transition(nit.SectionTypes)
 				return v
 			},
-			[]nitpicking.Section{
-				nitpicking.SectionVars,
-				nitpicking.SectionFuncs,
-				nitpicking.SectionMethods,
+			[]nit.Section{
+				nit.SectionVars,
+				nit.SectionFuncs,
+				nit.SectionMethods,
 			},
-			[]nitpicking.Section{
-				nitpicking.SectionStart,
-				nitpicking.SectionImports,
-				nitpicking.SectionTypes,
-				nitpicking.SectionConsts,
+			[]nit.Section{
+				nit.SectionStart,
+				nit.SectionImports,
+				nit.SectionTypes,
+				nit.SectionConsts,
 			},
 		},
 		{
 			"Vars",
-			func() nitpicking.SectionMachine {
-				v := nitpicking.SectionMachine{}
-				v.Transition(nitpicking.SectionImports)
-				v.Transition(nitpicking.SectionConsts)
-				v.Transition(nitpicking.SectionTypes)
-				v.Transition(nitpicking.SectionVars)
+			func() nit.SectionMachine {
+				v := nit.SectionMachine{}
+				v.Transition(nit.SectionImports)
+				v.Transition(nit.SectionConsts)
+				v.Transition(nit.SectionTypes)
+				v.Transition(nit.SectionVars)
 				return v
 			},
-			[]nitpicking.Section{
-				nitpicking.SectionFuncs,
-				nitpicking.SectionMethods,
+			[]nit.Section{
+				nit.SectionFuncs,
+				nit.SectionMethods,
 			},
-			[]nitpicking.Section{
-				nitpicking.SectionStart,
-				nitpicking.SectionImports,
-				nitpicking.SectionTypes,
-				nitpicking.SectionVars,
-				nitpicking.SectionConsts,
+			[]nit.Section{
+				nit.SectionStart,
+				nit.SectionImports,
+				nit.SectionTypes,
+				nit.SectionVars,
+				nit.SectionConsts,
 			},
 		},
 		{
 			"Funcs",
-			func() nitpicking.SectionMachine {
-				v := nitpicking.SectionMachine{}
-				v.Transition(nitpicking.SectionImports)
-				v.Transition(nitpicking.SectionConsts)
-				v.Transition(nitpicking.SectionTypes)
-				v.Transition(nitpicking.SectionVars)
-				v.Transition(nitpicking.SectionFuncs)
+			func() nit.SectionMachine {
+				v := nit.SectionMachine{}
+				v.Transition(nit.SectionImports)
+				v.Transition(nit.SectionConsts)
+				v.Transition(nit.SectionTypes)
+				v.Transition(nit.SectionVars)
+				v.Transition(nit.SectionFuncs)
 				return v
 			},
-			[]nitpicking.Section{
-				nitpicking.SectionFuncs,
-				nitpicking.SectionMethods,
+			[]nit.Section{
+				nit.SectionFuncs,
+				nit.SectionMethods,
 			},
-			[]nitpicking.Section{
-				nitpicking.SectionStart,
-				nitpicking.SectionImports,
-				nitpicking.SectionConsts,
-				nitpicking.SectionTypes,
-				nitpicking.SectionVars,
+			[]nit.Section{
+				nit.SectionStart,
+				nit.SectionImports,
+				nit.SectionConsts,
+				nit.SectionTypes,
+				nit.SectionVars,
 			},
 		},
 		{
 			"Methods",
-			func() nitpicking.SectionMachine {
-				v := nitpicking.SectionMachine{}
-				v.Transition(nitpicking.SectionImports)
-				v.Transition(nitpicking.SectionConsts)
-				v.Transition(nitpicking.SectionTypes)
-				v.Transition(nitpicking.SectionVars)
-				v.Transition(nitpicking.SectionFuncs)
-				v.Transition(nitpicking.SectionMethods)
+			func() nit.SectionMachine {
+				v := nit.SectionMachine{}
+				v.Transition(nit.SectionImports)
+				v.Transition(nit.SectionConsts)
+				v.Transition(nit.SectionTypes)
+				v.Transition(nit.SectionVars)
+				v.Transition(nit.SectionFuncs)
+				v.Transition(nit.SectionMethods)
 				return v
 			},
-			[]nitpicking.Section{
-				nitpicking.SectionMethods,
+			[]nit.Section{
+				nit.SectionMethods,
 			},
-			[]nitpicking.Section{
-				nitpicking.SectionStart,
-				nitpicking.SectionImports,
-				nitpicking.SectionConsts,
-				nitpicking.SectionTypes,
-				nitpicking.SectionVars,
-				nitpicking.SectionFuncs,
+			[]nit.Section{
+				nit.SectionStart,
+				nit.SectionImports,
+				nit.SectionConsts,
+				nit.SectionTypes,
+				nit.SectionVars,
+				nit.SectionFuncs,
 			},
 		},
 	}
