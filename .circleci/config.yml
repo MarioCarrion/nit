@@ -11,7 +11,7 @@ jobs:
       - run: go test -v ./...
   lint:
     docker:
-      - image: mariocarrion/nit:dockerfile-wip
+      - image: mariocarrion/nit:v0.1.1
     working_directory: /go/src/github.com/MarioCarrion/nit
     environment:
       CGO_ENABLED: 0
