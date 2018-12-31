@@ -40,14 +40,14 @@ func main() {
 		os.Exit(1)
 	}
 
+	var failed bool
+
 	for _, pkg := range flag.Args() {
 		p, err := build.Import(pkg, ".", 0)
 		if err != nil {
 			fmt.Printf("error importing %s\n", pkg)
 			os.Exit(1)
 		}
-
-		var failed bool
 
 		for _, f := range p.GoFiles {
 			fullpath := filepath.Join(p.Dir, f)
@@ -57,9 +57,9 @@ func main() {
 				fmt.Println(err)
 			}
 		}
+	}
 
-		if failed {
-			os.Exit(1)
-		}
+	if failed {
+		os.Exit(1)
 	}
 }
