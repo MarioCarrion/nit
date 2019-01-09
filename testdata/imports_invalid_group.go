@@ -8,5 +8,5 @@ import (
 )
 
 func ImportsInvalidGroup() {
-	fmt.Println("%s%s", nitpicking.Nitpicker{}, errors.New(""))
+	fmt.Println("%s%s", nit.Nitpicker{}, errors.New(""))
 }

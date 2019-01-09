@@ -1,7 +1,6 @@
 package nit
 
 import (
-	"fmt"
 	"go/ast"
 	"go/parser"
 	"go/token"
@@ -51,7 +50,7 @@ func (v *Nitpicker) validateToken(d ast.Decl) error {
 		funcDecl = t
 		nextState, err = NewFuncDeclSection(funcDecl)
 	default:
-		return fmt.Errorf("unknown declaration state")
+		return errors.New("unknown declaration state")
 	}
 	if err != nil {
 		return err
@@ -61,8 +60,14 @@ func (v *Nitpicker) validateToken(d ast.Decl) error {
 		return errors.Wrap(err, v.fset.PositionFor(d.Pos(), false).String())
 	}
 
-	if nextState == SectionImports {
+	switch nextState {
+	case SectionImports:
 		validator := &ImportsValidator{LocalPath: v.LocalPath}
+		if err := validator.Validate(genDecl, v.fset); err != nil {
+			return err
+		}
+	case SectionConsts:
+		validator := &ConstsValidator{}
 		if err := validator.Validate(genDecl, v.fset); err != nil {
 			return err
 		}

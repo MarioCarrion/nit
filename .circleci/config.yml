@@ -9,6 +9,14 @@ jobs:
       - checkout
       - run: go get -v -t -d ./...
       - run: go test -v ./...
+  build:
+    docker:
+      - image: circleci/golang:1.11.2
+    working_directory: /go/src/github.com/MarioCarrion/nit
+    steps:
+      - checkout
+      - run: go build github.com/MarioCarrion/nit/testdata
+      - run: go build github.com/MarioCarrion/nit/cmd/nit
   lint:
     docker:
       - image: mariocarrion/nit:v0.1.1
@@ -17,6 +25,7 @@ jobs:
       CGO_ENABLED: 0
     steps:
       - checkout
+      - run: go install github.com/MarioCarrion/nit/cmd/nit
       - run: gometalinter --skip=vendor --skip=testdata --enable-all --config=.gometalinter.json ./...
   release:
     docker:
@@ -31,6 +40,7 @@ workflows:
   test_and_lint:
     jobs:
       - test
+      - build
       - lint
   release:
     jobs:
