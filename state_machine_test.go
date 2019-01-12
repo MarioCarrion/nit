@@ -80,6 +80,7 @@ func TestImportsSectionMachine_Transition(t *testing.T) {
 	}
 }
 
+//nolint: dupl
 func TestSectionMachine_Transition(t *testing.T) {
 	tests := [...]struct {
 		name          string
@@ -94,15 +95,15 @@ func TestSectionMachine_Transition(t *testing.T) {
 			},
 			[]nit.Section{
 				nit.SectionImports,
-				nit.SectionConsts,
 				nit.SectionTypes,
+				nit.SectionConsts,
 				nit.SectionVars,
 				nit.SectionFuncs,
-				nit.SectionMethods,
 			},
 			[]nit.Section{
-				nit.Section(99),
 				nit.SectionStart,
+				nit.SectionMethods,
+				nit.Section(99),
 			},
 		},
 		{
@@ -113,47 +114,26 @@ func TestSectionMachine_Transition(t *testing.T) {
 				return v
 			},
 			[]nit.Section{
-				nit.SectionConsts,
 				nit.SectionTypes,
+				nit.SectionConsts,
 				nit.SectionVars,
 				nit.SectionFuncs,
-				nit.SectionMethods,
 			},
 			[]nit.Section{
 				nit.SectionStart,
 				nit.SectionImports,
-			},
-		},
-		{
-			"Consts",
-			func() nit.SectionMachine {
-				v := nit.SectionMachine{}
-				v.Transition(nit.SectionImports)
-				v.Transition(nit.SectionConsts)
-				return v
-			},
-			[]nit.Section{
-				nit.SectionConsts,
-				nit.SectionTypes,
-				nit.SectionVars,
-				nit.SectionFuncs,
 				nit.SectionMethods,
-			},
-			[]nit.Section{
-				nit.SectionStart,
-				nit.SectionImports,
 			},
 		},
 		{
 			"Types",
 			func() nit.SectionMachine {
 				v := nit.SectionMachine{}
-				v.Transition(nit.SectionImports)
-				v.Transition(nit.SectionConsts)
 				v.Transition(nit.SectionTypes)
 				return v
 			},
 			[]nit.Section{
+				nit.SectionConsts,
 				nit.SectionVars,
 				nit.SectionFuncs,
 				nit.SectionMethods,
@@ -162,16 +142,31 @@ func TestSectionMachine_Transition(t *testing.T) {
 				nit.SectionStart,
 				nit.SectionImports,
 				nit.SectionTypes,
+			},
+		},
+		{
+			"Consts",
+			func() nit.SectionMachine {
+				v := nit.SectionMachine{}
+				v.Transition(nit.SectionConsts)
+				return v
+			},
+			[]nit.Section{
 				nit.SectionConsts,
+				nit.SectionVars,
+				nit.SectionFuncs,
+				nit.SectionMethods,
+			},
+			[]nit.Section{
+				nit.SectionStart,
+				nit.SectionImports,
+				nit.SectionTypes,
 			},
 		},
 		{
 			"Vars",
 			func() nit.SectionMachine {
 				v := nit.SectionMachine{}
-				v.Transition(nit.SectionImports)
-				v.Transition(nit.SectionConsts)
-				v.Transition(nit.SectionTypes)
 				v.Transition(nit.SectionVars)
 				return v
 			},
@@ -183,18 +178,14 @@ func TestSectionMachine_Transition(t *testing.T) {
 				nit.SectionStart,
 				nit.SectionImports,
 				nit.SectionTypes,
-				nit.SectionVars,
 				nit.SectionConsts,
+				nit.SectionVars,
 			},
 		},
 		{
 			"Funcs",
 			func() nit.SectionMachine {
 				v := nit.SectionMachine{}
-				v.Transition(nit.SectionImports)
-				v.Transition(nit.SectionConsts)
-				v.Transition(nit.SectionTypes)
-				v.Transition(nit.SectionVars)
 				v.Transition(nit.SectionFuncs)
 				return v
 			},
@@ -205,8 +196,8 @@ func TestSectionMachine_Transition(t *testing.T) {
 			[]nit.Section{
 				nit.SectionStart,
 				nit.SectionImports,
-				nit.SectionConsts,
 				nit.SectionTypes,
+				nit.SectionConsts,
 				nit.SectionVars,
 			},
 		},
@@ -214,11 +205,7 @@ func TestSectionMachine_Transition(t *testing.T) {
 			"Methods",
 			func() nit.SectionMachine {
 				v := nit.SectionMachine{}
-				v.Transition(nit.SectionImports)
-				v.Transition(nit.SectionConsts)
 				v.Transition(nit.SectionTypes)
-				v.Transition(nit.SectionVars)
-				v.Transition(nit.SectionFuncs)
 				v.Transition(nit.SectionMethods)
 				return v
 			},
@@ -228,8 +215,8 @@ func TestSectionMachine_Transition(t *testing.T) {
 			[]nit.Section{
 				nit.SectionStart,
 				nit.SectionImports,
-				nit.SectionConsts,
 				nit.SectionTypes,
+				nit.SectionConsts,
 				nit.SectionVars,
 				nit.SectionFuncs,
 			},

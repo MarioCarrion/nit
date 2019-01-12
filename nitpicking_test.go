@@ -25,7 +25,6 @@ func TestNitpicker_Validate(t *testing.T) {
 			n := nit.Nitpicker{}
 
 			if err := n.Validate(filepath.Join("testdata", tt.filename)); tt.expectedError != (err != nil) {
-
 				ts.Fatalf("expected error %t, got %s", tt.expectedError, err)
 			}
 		})

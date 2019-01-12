@@ -4,16 +4,16 @@ import (
 	"fmt"
 )
 
+type (
+	Example struct{}
+)
+
 const (
 	FirstConst = "1"
 )
 
 const (
 	SecondConst = "2"
-)
-
-type (
-	Example struct{}
 )
 
 var (

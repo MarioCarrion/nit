@@ -12,10 +12,10 @@ const (
 	SectionStart Section = iota
 	// SectionImports defines the `import` state.
 	SectionImports
-	// SectionConsts defines the `const` state.
-	SectionConsts
 	// SectionTypes defines the `type` state.
 	SectionTypes
+	// SectionConsts defines the `const` state.
+	SectionConsts
 	// SectionVars defines the `var` state.
 	SectionVars
 	// SectionFuncs defines the `func` state.
