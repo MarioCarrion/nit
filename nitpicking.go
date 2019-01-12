@@ -34,6 +34,7 @@ func (v *Nitpicker) Validate(filename string) error {
 	return nil
 }
 
+//nolint:gocyclo
 func (v *Nitpicker) validateToken(d ast.Decl) error {
 	var (
 		err       error
@@ -68,6 +69,11 @@ func (v *Nitpicker) validateToken(d ast.Decl) error {
 		}
 	case SectionConsts:
 		validator := &ConstsValidator{}
+		if err := validator.Validate(genDecl, v.fset); err != nil {
+			return err
+		}
+	case SectionVars:
+		validator := &VarsValidator{}
 		if err := validator.Validate(genDecl, v.fset); err != nil {
 			return err
 		}
