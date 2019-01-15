@@ -10,24 +10,24 @@ I'm nitpicking your code.
 
 A really, really nitpicking linter that complains when the code is not organized according to the following very opinionated rules:
 
-1. `imports` is the first section
-   * Requires section declaration,
-   * One maximum,
-   * Separated in 3 blocks: standard, external and same package (local).
-1. `type` is the second section
-   * Requires section declaration,
-   * Section must be sorted: exported first, then unexported.
-1. `const` is the third section
-   * Requires section declaration,
-   * Multiple allowed,
-   * Section must be sorted: exported first, then unexported.
-1. `var` is the fourth section
-   * Requires section declaration,
-   * Section must be sorted: exported first, then unexported.
-1. `func` is the fifth section
-   * Must be sorted, exported first, then unexported.
-1. `func` method, is the sixth section
-   * Must be sorted by type, exported first, then unexported.
+1. [X] `imports` is the first section
+   - [X] Requires parenthesized declaration,
+   - [X] One maximum,
+   - [X] Separated in 3 blocks: standard, external and same package (local).
+1. [X] `type` is the second section
+   - [X] Requires parenthesized declaration,
+   - [X] Section must be sorted: exported first, then unexported.
+1. [X] `const` is the third section
+   - [X] Requires parenthesized declaration,
+   - [X] Multiple allowed,
+   - [X] Section must be sorted: exported first, then unexported.
+1. [X]`var` is the fourth section
+   - [X] Requires parenthesized declaration,
+   - [X] Section must be sorted: exported first, then unexported.
+1. [ ]`func` is the fifth section
+   - [ ] Must be sorted, exported first, then unexported.
+1. [ ]`func` method, is the sixth section
+   - [ ] Must be sorted by type, exported first, then unexported.
 
 ![code](code.png "code organization in file")
 
