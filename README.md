@@ -21,12 +21,12 @@ A really, really nitpicking linter that complains when the code is not organized
    - [X] Requires parenthesized declaration,
    - [X] Multiple allowed,
    - [X] Section must be sorted: exported first, then unexported.
-1. [X]`var` is the fourth section
+1. [X] `var` is the fourth section
    - [X] Requires parenthesized declaration,
    - [X] Section must be sorted: exported first, then unexported.
-1. [ ]`func` is the fifth section
+1. [ ] `func` is the fifth section
    - [ ] Must be sorted, exported first, then unexported.
-1. [ ]`func` method, is the sixth section
+1. [ ] `func` method, is the sixth section
    - [ ] Must be sorted by type, exported first, then unexported.
 
 ![code](code.png "code organization in file")
