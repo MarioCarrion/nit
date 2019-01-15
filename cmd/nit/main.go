@@ -12,9 +12,9 @@ import (
 
 //nolint: gochecknoglobals
 var (
-	version = "dev"
 	commit  = "none"
 	date    = "unknown"
+	version = "dev"
 )
 
 func main() {

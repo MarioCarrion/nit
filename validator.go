@@ -11,7 +11,7 @@ type (
 	// ConstsValidator defines the type including the rules used for validating
 	// the `const` sections.
 	ConstsValidator struct {
-		valueSpecValidator
+		sortedNamesValidator
 	}
 
 	// ImportsValidator defines the type including the rules used for validating
@@ -21,13 +21,19 @@ type (
 		fsm       *ImportsSectionMachine
 	}
 
+	// TypesValidator defines the type including the rules used for validating
+	// the `type` sections.
+	TypesValidator struct {
+		sortedNamesValidator
+	}
+
 	// VarsValidator defines the type including the rules used for validating
 	// the `var` sections.
 	VarsValidator struct {
-		valueSpecValidator
+		sortedNamesValidator
 	}
 
-	valueSpecValidator struct {
+	sortedNamesValidator struct {
 		exported *bool
 		last     string
 	}
@@ -54,13 +60,20 @@ func (c *ConstsValidator) Validate(v *ast.GenDecl, fset *token.FileSet) error { 
 			}
 		}
 
-		if err := c.validateGroupNames(errPrefix, s.Names); err != nil {
-			return err
+		for _, name := range s.Names {
+			if err := c.validateSortedName(errPrefix, name); err != nil {
+				return err
+			}
 		}
 	}
 
 	return nil
 }
+
+// Validate valites the token according to the `func` rules.
+// func (f *FuncsValidator) Validate(v *ast.FuncDecl, fst *token.FileSet) error {
+// 	return nil
+// }
 
 // Validate validates the token according to the `imports` rules.
 func (i *ImportsValidator) Validate(v *ast.GenDecl, fset *token.FileSet) error {
@@ -104,6 +117,28 @@ func (i *ImportsValidator) Validate(v *ast.GenDecl, fset *token.FileSet) error {
 	return nil
 }
 
+// Validate validates the token according to the `type` rules.
+func (tv *TypesValidator) Validate(v *ast.GenDecl, fset *token.FileSet) error { //nolint: gocyclo
+	if !v.Lparen.IsValid() {
+		return errors.Wrap(errors.New("expected parenthesized declaration"), fset.PositionFor(v.Pos(), false).String())
+	}
+
+	for _, t := range v.Specs {
+		errPrefix := fset.PositionFor(t.Pos(), false).String()
+
+		s, ok := t.(*ast.TypeSpec)
+		if !ok {
+			return errors.Wrap(errors.Errorf("invalid token %+v", t), errPrefix)
+		}
+
+		if err := tv.validateSortedName(errPrefix, s.Name); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
 // Validate validates the token according to the `var` rules.
 func (c *VarsValidator) Validate(v *ast.GenDecl, fset *token.FileSet) error { //nolint: gocyclo
 	if !v.Lparen.IsValid() {
@@ -118,30 +153,30 @@ func (c *VarsValidator) Validate(v *ast.GenDecl, fset *token.FileSet) error { //
 			return errors.Wrap(errors.Errorf("invalid token %+v", t), errPrefix)
 		}
 
-		if err := c.validateGroupNames(errPrefix, s.Names); err != nil {
-			return err
+		for _, name := range s.Names {
+			if err := c.validateSortedName(errPrefix, name); err != nil {
+				return err
+			}
 		}
 	}
 
 	return nil
 }
 
-func (v *valueSpecValidator) validateGroupNames(errPrefix string, names []*ast.Ident) error {
-	for _, n := range names {
-		if v.exported == nil || (*v.exported && !n.IsExported()) {
-			e := n.IsExported()
-			v.exported = &e
-		}
-
-		if *v.exported != n.IsExported() {
-			return errors.Wrap(errors.Errorf("%s is not grouped correctly", n.Name), errPrefix)
-		}
-
-		if v.last != "" && v.last > n.Name {
-			return errors.Wrap(errors.Errorf("%s is not sorted", n.Name), errPrefix)
-		}
-
-		v.last = n.Name
+func (v *sortedNamesValidator) validateSortedName(errPrefix string, name *ast.Ident) error {
+	if v.exported == nil || (*v.exported && !name.IsExported()) {
+		e := name.IsExported()
+		v.exported = &e
 	}
+
+	if *v.exported != name.IsExported() {
+		return errors.Wrap(errors.Errorf("%s is not grouped correctly", name.Name), errPrefix)
+	}
+
+	if v.last != "" && v.last > name.Name {
+		return errors.Wrap(errors.Errorf("%s is not sorted", name.Name), errPrefix)
+	}
+
+	v.last = name.Name
 	return nil
 }

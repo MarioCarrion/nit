@@ -26,7 +26,7 @@ jobs:
     steps:
       - checkout
       - run: go install github.com/MarioCarrion/nit/cmd/nit
-      - run: gometalinter --skip=vendor --skip=testdata --enable-all --config=.gometalinter.json ./...
+      - run: gometalinter --enable-all --config=.gometalinter.json ./...
   release:
     docker:
       - image: circleci/golang:1.11.2

@@ -7,6 +7,14 @@ import (
 	"strings"
 )
 
+type (
+	// ImportsSection represents an `imports` section
+	ImportsSection uint8
+
+	// Section represents a code section.
+	Section uint8
+)
+
 const (
 	// SectionStart defines the initial State in the validator.
 	SectionStart Section = iota
@@ -31,14 +39,6 @@ const (
 	ImportsSectionExternal
 	// ImportsSectionLocal represents the local Packages `imports` section.
 	ImportsSectionLocal
-)
-
-type (
-	// Section represents a code section.
-	Section uint8
-
-	// ImportsSection represents an `imports` section
-	ImportsSection uint8
 )
 
 // NewGenDeclSection returns a new State that matches the decl type.

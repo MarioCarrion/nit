@@ -1,10 +1,12 @@
 {
   "Disable": ["lll", "test"],
+  "Enable": ["nit"],
   "Linters": {
     "nit": {
-      "Command": "nit -pkg github.com/MarioCarrion/",
-      "Pattern": "PATH:LINE:MESSAGE",
+      "Command": "nit -pkg github.com/MarioCarrion/nit ",
+      "Pattern": "PATH:LINE:COL:MESSAGE",
       "PartitionStrategy": "packages"
     }
-  }
+  },
+  "Skip": ["vendor", "testdata"]
 }

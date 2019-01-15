@@ -67,6 +67,11 @@ func (v *Nitpicker) validateToken(d ast.Decl) error {
 		if err := validator.Validate(genDecl, v.fset); err != nil {
 			return err
 		}
+	case SectionTypes:
+		validator := &TypesValidator{}
+		if err := validator.Validate(genDecl, v.fset); err != nil {
+			return err
+		}
 	case SectionConsts:
 		validator := &ConstsValidator{}
 		if err := validator.Validate(genDecl, v.fset); err != nil {
