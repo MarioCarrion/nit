@@ -8,5 +8,5 @@ import (
 )
 
 func ImportsMissingLine() {
-	fmt.Println("%s%s", nit.Nitpicker{}, errors.New(""))
+	fmt.Printf("%+v%s", nit.Nitpicker{}, errors.New(""))
 }

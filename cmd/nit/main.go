@@ -12,7 +12,7 @@ import (
 
 //nolint: gochecknoglobals
 var (
-	commit  = "none"
+	commit  = "none" //-
 	date    = "unknown"
 	version = "dev"
 )
@@ -24,6 +24,7 @@ func main() {
 		fmt.Fprintf(os.Stderr, "\n%s [packages]\n", os.Args[0])
 		flag.PrintDefaults()
 	}
+	//-
 
 	localPkg := flag.String("pkg", "", "local package")
 	showVersion := flag.Bool("version", false, "prints current version information")

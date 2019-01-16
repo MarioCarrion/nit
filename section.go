@@ -41,6 +41,14 @@ const (
 	ImportsSectionLocal
 )
 
+// NewFuncDeclSection returns a new State that matches the decl type.
+func NewFuncDeclSection(decl *ast.FuncDecl) (Section, error) {
+	if decl.Recv == nil {
+		return SectionFuncs, nil
+	}
+	return SectionMethods, nil
+}
+
 // NewGenDeclSection returns a new State that matches the decl type.
 func NewGenDeclSection(decl *ast.GenDecl) (Section, error) {
 	switch decl.Tok {
@@ -55,14 +63,6 @@ func NewGenDeclSection(decl *ast.GenDecl) (Section, error) {
 	}
 
 	return SectionStart, fmt.Errorf("unknown generic declaration node")
-}
-
-// NewFuncDeclSection returns a new State that matches the decl type.
-func NewFuncDeclSection(decl *ast.FuncDecl) (Section, error) {
-	if decl.Recv == nil {
-		return SectionFuncs, nil
-	}
-	return SectionMethods, nil
 }
 
 // NewImportsSection returns a new ImportsSection from the path value.

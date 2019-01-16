@@ -9,5 +9,5 @@ import (
 )
 
 func ImportsValid() {
-	fmt.Println("%s", errors.New(""), nit.Nitpicker{})
+	fmt.Printf("%s%+v", errors.New(""), nit.Nitpicker{})
 }
