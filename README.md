@@ -24,8 +24,8 @@ A really, really nitpicking linter that complains when the code is not organized
 1. [X] `var` is the fourth section
    - [X] Requires parenthesized declaration,
    - [X] Section must be sorted: exported first, then unexported.
-1. [ ] `func` is the fifth section
-   - [ ] Must be sorted, exported first, then unexported.
+1. [X] `func` is the fifth section
+   - [X] Must be sorted, exported first, then unexported.
 1. [ ] `func` method, is the sixth section
    - [ ] Must be sorted by type, exported first, then unexported.
 
