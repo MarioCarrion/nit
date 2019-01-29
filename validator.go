@@ -21,13 +21,6 @@ type (
 		Comments *BreakComments
 	}
 
-	// ImportsValidator defines the type including the rules used for validating
-	// the `imports` section.
-	ImportsValidator struct {
-		LocalPath string
-		fsm       *ImportsSectionMachine
-	}
-
 	// TypesValidator defines the type including the rules used for validating
 	// the `type` sections.
 	TypesValidator struct {
@@ -101,54 +94,6 @@ func (f *FuncsValidator) Validate(v *ast.FuncDecl, fset *token.FileSet) error {
 	}
 
 	f.Comments.MoveTo(fset.PositionFor(v.End(), false).Line)
-
-	return nil
-}
-
-// Validate makes sure the implemented `imports` declaration satisfies the
-// following rules:
-// * Group declaration is parenthesized
-// * Packages are separated by a breaking line like this:
-//   * First standard packages,
-//   * Next external packages, and
-//   * Finally local packages
-func (i *ImportsValidator) Validate(v *ast.GenDecl, fset *token.FileSet) error {
-	if !v.Lparen.IsValid() {
-		return errors.Wrap(errors.New("expected parenthesized declaration"), fset.PositionFor(v.Pos(), false).String())
-	}
-
-	lastLine := fset.PositionFor(v.Pos(), false).Line
-
-	for _, t := range v.Specs {
-		errPrefix := fset.PositionFor(t.Pos(), false).String()
-
-		s, ok := t.(*ast.ImportSpec)
-		if !ok {
-			return errors.Wrap(errors.Errorf("invalid token %+v", t), errPrefix)
-		}
-
-		section := NewImportsSection(s.Path.Value, i.LocalPath)
-		if i.fsm == nil {
-			i.fsm = NewImportsSectionMachine(section)
-		}
-		if err := i.fsm.Transition(section); err != nil {
-			return errors.Wrap(err, errPrefix)
-		}
-
-		newLine := fset.PositionFor(t.Pos(), false).Line
-
-		if i.fsm.Current() == i.fsm.Previous() {
-			if lastLine+1 != newLine {
-				return errors.Wrap(errors.New("extra line break in section"), errPrefix)
-			}
-		} else {
-			if lastLine+1 == newLine {
-				return errors.Wrap(errors.New("missing line break in section"), errPrefix)
-			}
-		}
-
-		lastLine = newLine
-	}
 
 	return nil
 }

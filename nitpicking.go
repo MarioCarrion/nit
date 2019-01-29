@@ -20,7 +20,7 @@ type (
 	Nitpicker struct {
 		LocalPath  string
 		fset       *token.FileSet
-		fsm        SectionMachine
+		fsm        *FileSectionMachine
 		fvalidator *FuncsValidator
 	}
 )
@@ -73,16 +73,16 @@ func (v *Nitpicker) validateToken(d ast.Decl) error {
 		err       error
 		genDecl   *ast.GenDecl
 		funcDecl  *ast.FuncDecl
-		nextState Section
+		nextState FileSection
 	)
 
 	switch t := d.(type) {
 	case *ast.GenDecl:
 		genDecl = t
-		nextState, err = NewGenDeclSection(genDecl)
+		nextState, err = NewGenDeclFileSection(genDecl)
 	case *ast.FuncDecl:
 		funcDecl = t
-		nextState, err = NewFuncDeclSection(funcDecl)
+		nextState, err = NewFuncDeclFileSection(funcDecl)
 	default:
 		return errors.New("unknown declaration state")
 	}
@@ -90,32 +90,40 @@ func (v *Nitpicker) validateToken(d ast.Decl) error {
 		return err
 	}
 
+	if v.fsm == nil {
+		fsm, err := NewFileSectionMachine(nextState)
+		if err != nil {
+			return errors.Wrap(err, v.fset.PositionFor(d.Pos(), false).String())
+		}
+		v.fsm = fsm
+	}
+
 	if err = v.fsm.Transition(nextState); err != nil {
 		return errors.Wrap(err, v.fset.PositionFor(d.Pos(), false).String())
 	}
 
 	switch nextState {
-	case SectionImports:
-		validator := &ImportsValidator{LocalPath: v.LocalPath}
+	case FileSectionImports:
+		validator := NewImportsValidator(v.LocalPath)
 		if err := validator.Validate(genDecl, v.fset); err != nil {
 			return err
 		}
-	case SectionTypes:
+	case FileSectionTypes:
 		validator := &TypesValidator{}
 		if err := validator.Validate(genDecl, v.fset); err != nil {
 			return err
 		}
-	case SectionConsts:
+	case FileSectionConsts:
 		validator := &ConstsValidator{}
 		if err := validator.Validate(genDecl, v.fset); err != nil {
 			return err
 		}
-	case SectionVars:
+	case FileSectionVars:
 		validator := &VarsValidator{}
 		if err := validator.Validate(genDecl, v.fset); err != nil {
 			return err
 		}
-	case SectionFuncs:
+	case FileSectionFuncs:
 		if err := v.fvalidator.Validate(funcDecl, v.fset); err != nil {
 			return err
 		}

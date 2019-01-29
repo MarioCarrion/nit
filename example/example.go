@@ -36,6 +36,6 @@ func Something() {
 	fmt.Println("vim-go")
 	ll.Println("hi")
 
-	fmt.Println(nit.Section(0))
+	fmt.Println(nit.FileSection(0))
 	fmt.Println(errors.New("bla"))
 }
