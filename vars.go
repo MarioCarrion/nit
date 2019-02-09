@@ -21,6 +21,8 @@ type (
 // * Sorted exported vars are declared first, and
 // * Sorted unexported vars are declared next
 func (c *VarsValidator) Validate(v *ast.GenDecl, fset *token.FileSet) error { //nolint: gocyclo
+	c.identType = "Var"
+
 	if !v.Lparen.IsValid() {
 		return errors.Wrap(errors.New("expected parenthesized declaration"), fset.PositionFor(v.Pos(), false).String())
 	}

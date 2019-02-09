@@ -21,8 +21,13 @@ func TestFuncsValidator_Validate(t *testing.T) {
 			false,
 		},
 		{
-			"OK: groupd",
+			"OK: grouped",
 			"funcs_group.go",
+			false,
+		},
+		{
+			"OK: sorted",
+			"funcs_sorted_ok.go",
 			false,
 		},
 		{
@@ -51,7 +56,7 @@ func TestFuncsValidator_Validate(t *testing.T) {
 			}
 
 			comments := nit.NewBreakComments(fset, f.Comments)
-			validator := nit.FuncsValidator{Comments: &comments}
+			validator := nit.NewFuncsValidator(comments)
 
 			for _, s := range f.Decls {
 				switch g := s.(type) {

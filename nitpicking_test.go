@@ -18,6 +18,11 @@ func TestNitpicker_Validate(t *testing.T) {
 			"nitpicker_valid.go",
 			false,
 		},
+		{
+			"Error",
+			"nitpicker_error_type.go",
+			true,
+		},
 	}
 
 	for _, tt := range tests {

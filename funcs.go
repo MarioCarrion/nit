@@ -10,9 +10,16 @@ type (
 	// functions.
 	FuncsValidator struct {
 		sortedNamesValidator
-		Comments *BreakComments
+
+		comments *BreakComments
+		lastLine int
 	}
 )
+
+// NewFuncsValidator returns a correctly initialized FuncsValidator.
+func NewFuncsValidator(c *BreakComments) *FuncsValidator {
+	return &FuncsValidator{comments: c, sortedNamesValidator: sortedNamesValidator{identType: "Function"}}
+}
 
 // Validate makes sure the implemented function satisfies the following rules
 // considering all previous declared functions:
@@ -26,7 +33,7 @@ func (f *FuncsValidator) Validate(v *ast.FuncDecl, fset *token.FileSet) error {
 		return err
 	}
 
-	if f.Comments.Next() > fset.PositionFor(v.Pos(), false).Line {
+	if f.lastLine != 0 && f.comments.Next() > f.lastLine {
 		f.last = ""
 	}
 
@@ -34,7 +41,8 @@ func (f *FuncsValidator) Validate(v *ast.FuncDecl, fset *token.FileSet) error {
 		return err
 	}
 
-	f.Comments.MoveTo(fset.PositionFor(v.End(), false).Line)
+	f.lastLine = fset.PositionFor(v.End(), false).Line
+	f.comments.MoveTo(f.lastLine)
 
 	return nil
 }

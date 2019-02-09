@@ -1,6 +1,7 @@
 package nit
 
 import (
+	"fmt"
 	"go/ast"
 
 	"github.com/pkg/errors"
@@ -8,8 +9,9 @@ import (
 
 type (
 	sortedNamesValidator struct {
-		exported *bool
-		last     string
+		identType string
+		exported  *bool
+		last      string
 	}
 )
 
@@ -20,7 +22,7 @@ func (v *sortedNamesValidator) validateExported(errPrefix string, name *ast.Iden
 	}
 
 	if *v.exported != name.IsExported() {
-		return errors.Wrap(errors.Errorf("%s is not grouped correctly", name.Name), errPrefix)
+		return errors.Wrap(errors.Errorf("%s `%s` is not grouped correctly", v.identType, name.Name), errPrefix)
 	}
 
 	return nil
@@ -39,8 +41,9 @@ func (v *sortedNamesValidator) validateName(errPrefix string, name *ast.Ident) e
 }
 
 func (v *sortedNamesValidator) validateSortedName(errPrefix string, name *ast.Ident) error {
+	fmt.Printf(">>>%s - %s - %p\n", v.last, name.Name, v)
 	if v.last != "" && v.last > name.Name {
-		return errors.Wrap(errors.Errorf("%s is not sorted", name.Name), errPrefix)
+		return errors.Wrap(errors.Errorf("%s `%s` is not sorted", v.identType, name.Name), errPrefix)
 	}
 
 	v.last = name.Name

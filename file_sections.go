@@ -40,7 +40,7 @@ type (
 )
 
 const (
-	// FileSectionImports defines the `import` state.
+	// FileSectionImports defines the `imports` state.
 	FileSectionImports FileSection = iota // FIXME kill
 
 	// FileSectionTypes defines the `type` state.
@@ -157,7 +157,7 @@ func (constsFileSection) Funcs() (FileSectionTransition, error) {
 }
 
 func (constsFileSection) Imports() (FileSectionTransition, error) {
-	return nil, errors.New("imports is invalid, next one must be vars, funcs or methods")
+	return nil, errors.New("`imports` is invalid, next one must be `vars`, `functions` or `methods`")
 }
 
 func (constsFileSection) Methods() (FileSectionTransition, error) {
@@ -165,7 +165,7 @@ func (constsFileSection) Methods() (FileSectionTransition, error) {
 }
 
 func (constsFileSection) Types() (FileSectionTransition, error) {
-	return nil, errors.New("types is invalid, next one must be vars, funcs or methods")
+	return nil, errors.New("`types` is invalid, next one must be `vars`, `functions` or `methods`")
 }
 
 func (constsFileSection) Vars() (FileSectionTransition, error) {
@@ -175,7 +175,7 @@ func (constsFileSection) Vars() (FileSectionTransition, error) {
 //-
 
 func (funcsFileSection) Consts() (FileSectionTransition, error) {
-	return nil, errors.New("const is invalid, next one must be funcs or methods")
+	return nil, errors.New("`consts` is invalid, next one must be `functions` or `methods`")
 }
 
 func (funcsFileSection) Funcs() (FileSectionTransition, error) {
@@ -183,7 +183,7 @@ func (funcsFileSection) Funcs() (FileSectionTransition, error) {
 }
 
 func (funcsFileSection) Imports() (FileSectionTransition, error) {
-	return nil, errors.New("imports is invalid, next one must be funcs or methods")
+	return nil, errors.New("`imports` is invalid, next one must be `functions` or `methods`")
 }
 
 func (funcsFileSection) Methods() (FileSectionTransition, error) {
@@ -191,11 +191,11 @@ func (funcsFileSection) Methods() (FileSectionTransition, error) {
 }
 
 func (funcsFileSection) Types() (FileSectionTransition, error) {
-	return nil, errors.New("type is invalid, next one must be funcs or methods")
+	return nil, errors.New("`types` is invalid, next one must be `functions` or `methods`")
 }
 
 func (funcsFileSection) Vars() (FileSectionTransition, error) {
-	return nil, errors.New("vars is invalid, next one must be funcs or methods")
+	return nil, errors.New("`vars` is invalid, next one must be `functions` or `methods`")
 }
 
 //-
@@ -227,15 +227,15 @@ func (importsFileSection) Vars() (FileSectionTransition, error) {
 //-
 
 func (methodsFileSection) Consts() (FileSectionTransition, error) {
-	return nil, errors.New("consts is invalid, next one must be methods")
+	return nil, errors.New("`consts` is invalid, next one must be `methods`")
 }
 
 func (methodsFileSection) Funcs() (FileSectionTransition, error) {
-	return nil, errors.New("funcs is invalid, next one must be methods")
+	return nil, errors.New("`functions` is invalid, next one must be `methods`")
 }
 
 func (methodsFileSection) Imports() (FileSectionTransition, error) {
-	return nil, errors.New("imports is invalid, next one must be methods")
+	return nil, errors.New("`imports` is invalid, next one must be `methods`")
 }
 
 func (methodsFileSection) Methods() (FileSectionTransition, error) {
@@ -243,11 +243,11 @@ func (methodsFileSection) Methods() (FileSectionTransition, error) {
 }
 
 func (methodsFileSection) Types() (FileSectionTransition, error) {
-	return nil, errors.New("types is invalid, next one must be methods")
+	return nil, errors.New("`types` is invalid, next one must be `methods`")
 }
 
 func (methodsFileSection) Vars() (FileSectionTransition, error) {
-	return nil, errors.New("vars is invalid, next one must be methods")
+	return nil, errors.New("`vars` is invalid, next one must be `methods`")
 }
 
 //-
@@ -261,7 +261,7 @@ func (typesFileSection) Funcs() (FileSectionTransition, error) {
 }
 
 func (typesFileSection) Imports() (FileSectionTransition, error) {
-	return nil, errors.New("imports is invalid, next one must be const, vars, funcs or method")
+	return nil, errors.New("`imports` is invalid, next one must be `const`, `vars`, `functions` or `methods`")
 }
 
 func (typesFileSection) Methods() (FileSectionTransition, error) {
@@ -279,7 +279,7 @@ func (typesFileSection) Vars() (FileSectionTransition, error) {
 //-
 
 func (varsFileSection) Consts() (FileSectionTransition, error) {
-	return nil, errors.New("types is invalid, next one must be func or methods")
+	return nil, errors.New("`consts` is invalid, next one must be `functions` or `methods`")
 }
 
 func (varsFileSection) Funcs() (FileSectionTransition, error) {
@@ -287,7 +287,7 @@ func (varsFileSection) Funcs() (FileSectionTransition, error) {
 }
 
 func (varsFileSection) Imports() (FileSectionTransition, error) {
-	return nil, errors.New("types is invalid, next one must be func or methods")
+	return nil, errors.New("`imports` is invalid, next one must be `functions` or `methods`")
 }
 
 func (varsFileSection) Methods() (FileSectionTransition, error) {
@@ -295,7 +295,7 @@ func (varsFileSection) Methods() (FileSectionTransition, error) {
 }
 
 func (varsFileSection) Types() (FileSectionTransition, error) {
-	return nil, errors.New("types is invalid, next one must be func or methods")
+	return nil, errors.New("`types` is invalid, next one must be `functions` or `methods`")
 }
 
 func (varsFileSection) Vars() (FileSectionTransition, error) {

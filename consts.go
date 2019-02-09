@@ -20,6 +20,8 @@ type (
 // * Group declaration is parenthesized
 // * Declarations are sorted
 func (c *ConstsValidator) Validate(v *ast.GenDecl, fset *token.FileSet) error { //nolint: gocyclo
+	c.identType = "Const"
+
 	if !v.Lparen.IsValid() {
 		return errors.Wrap(errors.New("expected parenthesized declaration"), fset.PositionFor(v.Pos(), false).String())
 	}

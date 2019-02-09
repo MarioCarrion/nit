@@ -19,7 +19,7 @@ const (
 )
 
 // NewBreakComments returns all the valid break-like comments.
-func NewBreakComments(fset *token.FileSet, comments []*ast.CommentGroup) BreakComments {
+func NewBreakComments(fset *token.FileSet, comments []*ast.CommentGroup) *BreakComments {
 	r := BreakComments{}
 
 	for _, c := range comments {
@@ -32,15 +32,7 @@ func NewBreakComments(fset *token.FileSet, comments []*ast.CommentGroup) BreakCo
 			}
 		}
 	}
-	return r
-}
-
-// Returns the next break line if any, when no more left it returns -1.
-func (c *BreakComments) Next() int {
-	if c.index >= len(c.comments) {
-		return -1
-	}
-	return c.comments[c.index]
+	return &r
 }
 
 // Moves current line cursor to the received line.
@@ -55,4 +47,12 @@ func (c *BreakComments) MoveTo(line int) {
 		}
 		c.index++
 	}
+}
+
+// Returns the next break line if any, when no more left it returns -1.
+func (c *BreakComments) Next() int {
+	if c.index >= len(c.comments) {
+		return -1
+	}
+	return c.comments[c.index]
 }

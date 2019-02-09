@@ -14,7 +14,10 @@ type (
 		LocalPath  string
 		fset       *token.FileSet
 		fsm        *FileSectionMachine
+		comments   *BreakComments
+		tvalidator *TypesValidator
 		fvalidator *FuncsValidator
+		mvalidator *MethodsValidator
 	}
 )
 
@@ -26,8 +29,7 @@ func (v *Nitpicker) Validate(filename string) error {
 		return errors.Wrap(err, "parsing file failed")
 	}
 
-	comments := NewBreakComments(v.fset, f.Comments)
-	v.fvalidator = &FuncsValidator{Comments: &comments}
+	v.comments = NewBreakComments(v.fset, f.Comments)
 
 	for _, s := range f.Decls {
 		// fmt.Printf("%d == %T - %+v -- %t\n", v.fset.PositionFor(s.Pos(), false).Line, s, s, s.End().IsValid())
@@ -81,8 +83,11 @@ func (v *Nitpicker) validateToken(d ast.Decl) error {
 			return err
 		}
 	case FileSectionTypes:
-		validator := &TypesValidator{}
-		if err := validator.Validate(genDecl, v.fset); err != nil {
+		if v.tvalidator != nil {
+			return errors.New("only one `type` section block is allowed per file")
+		}
+		v.tvalidator = &TypesValidator{}
+		if err := v.tvalidator.Validate(genDecl, v.fset); err != nil {
 			return err
 		}
 	case FileSectionConsts:
@@ -96,7 +101,21 @@ func (v *Nitpicker) validateToken(d ast.Decl) error {
 			return err
 		}
 	case FileSectionFuncs:
+		if v.fvalidator == nil {
+			v.fvalidator = NewFuncsValidator(v.comments)
+		}
 		if err := v.fvalidator.Validate(funcDecl, v.fset); err != nil {
+			return err
+		}
+	case FileSectionMethods:
+		if v.mvalidator == nil {
+			mvalidator, err := NewMethodsValidator(v.comments, v.tvalidator)
+			if err != nil {
+				return err
+			}
+			v.mvalidator = mvalidator
+		}
+		if err := v.mvalidator.Validate(funcDecl, v.fset); err != nil {
 			return err
 		}
 	}
