@@ -1,7 +1,6 @@
 package nit
 
 import (
-	"fmt"
 	"go/ast"
 
 	"github.com/pkg/errors"
@@ -41,7 +40,6 @@ func (v *sortedNamesValidator) validateName(errPrefix string, name *ast.Ident) e
 }
 
 func (v *sortedNamesValidator) validateSortedName(errPrefix string, name *ast.Ident) error {
-	fmt.Printf(">>>%s - %s - %p\n", v.last, name.Name, v)
 	if v.last != "" && v.last > name.Name {
 		return errors.Wrap(errors.Errorf("%s `%s` is not sorted", v.identType, name.Name), errPrefix)
 	}

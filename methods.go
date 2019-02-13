@@ -1,7 +1,6 @@
 package nit
 
 import (
-	"fmt"
 	"go/ast"
 	"go/token"
 	"reflect"
@@ -87,7 +86,6 @@ func (m *MethodsValidator) Validate(v *ast.FuncDecl, fset *token.FileSet) error 
 			return err
 		}
 		m.lastType = rcvType.Name
-		fmt.Println(rcvType.Name)
 	}
 
 	m.sortedMethods.identType = "Method"
