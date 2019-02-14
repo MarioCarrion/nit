@@ -14,6 +14,20 @@ type (
 	}
 )
 
+func (v *sortedNamesValidator) validateName(errPrefix string, name *ast.Ident) error {
+	if err := v.validateExported(errPrefix, name); err != nil {
+		return err
+	}
+
+	if err := v.validateSortedName(errPrefix, name); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+//-
+
 func (v *sortedNamesValidator) validateExported(errPrefix string, name *ast.Ident) error {
 	if v.exported == nil || (*v.exported && !name.IsExported()) {
 		e := name.IsExported()
@@ -22,18 +36,6 @@ func (v *sortedNamesValidator) validateExported(errPrefix string, name *ast.Iden
 
 	if *v.exported != name.IsExported() {
 		return errors.Wrap(errors.Errorf("%s `%s` is not grouped correctly", v.identType, name.Name), errPrefix)
-	}
-
-	return nil
-}
-
-func (v *sortedNamesValidator) validateName(errPrefix string, name *ast.Ident) error {
-	if err := v.validateExported(errPrefix, name); err != nil {
-		return err
-	}
-
-	if err := v.validateSortedName(errPrefix, name); err != nil {
-		return err
 	}
 
 	return nil

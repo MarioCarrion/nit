@@ -16,7 +16,6 @@ type (
 		sortedTypes   sortedNamesValidator
 		sortedMethods sortedNamesValidator
 		types         map[string]struct{}
-		lastLine      int
 		lastType      string
 	}
 
@@ -68,7 +67,7 @@ func (m *MethodsValidator) Validate(v *ast.FuncDecl, fset *token.FileSet) error 
 		if honorComments {
 			next := m.comments.Next()
 
-			if m.lastLine != 0 && next > m.lastLine {
+			if next != -1 && fset.PositionFor(i.Pos(), false).Line > next {
 				v.last = ""
 			}
 		}
@@ -93,8 +92,7 @@ func (m *MethodsValidator) Validate(v *ast.FuncDecl, fset *token.FileSet) error 
 		return err
 	}
 
-	m.lastLine = fset.PositionFor(v.End(), false).Line
-	m.comments.MoveTo(m.lastLine)
+	m.comments.MoveTo(fset.PositionFor(v.End(), false).Line)
 
 	return nil
 }

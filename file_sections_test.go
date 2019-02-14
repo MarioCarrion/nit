@@ -331,7 +331,7 @@ func TestVarsFileSectionTransition(t *testing.T) {
 		{
 			"Vars",
 			i.Vars,
-			false,
+			true,
 		},
 	}
 

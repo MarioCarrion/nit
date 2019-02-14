@@ -63,12 +63,6 @@ func NewImportsSection(path, localPathPrefix string) ImportsSection {
 	return ImportsSectionExternal
 }
 
-// NewImportsValidator returns a new instalce of ImporstValidator with the
-// local path prefix set.
-func NewImportsValidator(localPath string) ImportsValidator {
-	return ImportsValidator{localPath: localPath}
-}
-
 // NewImportsSectionMachine returns a new ImportsSectionMachine with the
 // initial state as `start`.
 func NewImportsSectionMachine(start ImportsSection) (*ImportsSectionMachine, error) {
@@ -92,6 +86,12 @@ func NewImportsTransition(s ImportsSection) (ImportsTransition, error) {
 		return localImportsTransition{}, nil
 	}
 	return nil, errors.New("invalid imports value")
+}
+
+// NewImportsValidator returns a new instalce of ImporstValidator with the
+// local path prefix set.
+func NewImportsValidator(localPath string) ImportsValidator {
+	return ImportsValidator{localPath: localPath}
 }
 
 //-

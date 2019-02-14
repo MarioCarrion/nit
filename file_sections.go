@@ -157,7 +157,7 @@ func (constsFileSection) Funcs() (FileSectionTransition, error) {
 }
 
 func (constsFileSection) Imports() (FileSectionTransition, error) {
-	return nil, errors.New("`imports` is invalid, next one must be `vars`, `functions` or `methods`")
+	return nil, errors.New("`imports` is invalid, next one must be `var`, `functions` or `methods`")
 }
 
 func (constsFileSection) Methods() (FileSectionTransition, error) {
@@ -165,7 +165,7 @@ func (constsFileSection) Methods() (FileSectionTransition, error) {
 }
 
 func (constsFileSection) Types() (FileSectionTransition, error) {
-	return nil, errors.New("`types` is invalid, next one must be `vars`, `functions` or `methods`")
+	return nil, errors.New("`types` is invalid, next one must be `var`, `functions` or `methods`")
 }
 
 func (constsFileSection) Vars() (FileSectionTransition, error) {
@@ -195,7 +195,7 @@ func (funcsFileSection) Types() (FileSectionTransition, error) {
 }
 
 func (funcsFileSection) Vars() (FileSectionTransition, error) {
-	return nil, errors.New("`vars` is invalid, next one must be `functions` or `methods`")
+	return nil, errors.New("`var` is invalid, next one must be `functions` or `methods`")
 }
 
 //-
@@ -247,7 +247,7 @@ func (methodsFileSection) Types() (FileSectionTransition, error) {
 }
 
 func (methodsFileSection) Vars() (FileSectionTransition, error) {
-	return nil, errors.New("`vars` is invalid, next one must be `methods`")
+	return nil, errors.New("`var` is invalid, next one must be `methods`")
 }
 
 //-
@@ -261,7 +261,7 @@ func (typesFileSection) Funcs() (FileSectionTransition, error) {
 }
 
 func (typesFileSection) Imports() (FileSectionTransition, error) {
-	return nil, errors.New("`imports` is invalid, next one must be `const`, `vars`, `functions` or `methods`")
+	return nil, errors.New("`imports` is invalid, next one must be `const`, `var`, `functions` or `methods`")
 }
 
 func (typesFileSection) Methods() (FileSectionTransition, error) {
@@ -299,5 +299,5 @@ func (varsFileSection) Types() (FileSectionTransition, error) {
 }
 
 func (varsFileSection) Vars() (FileSectionTransition, error) {
-	return varsFileSection{}, nil
+	return nil, errors.New("`var` is invalid, next one must be `functions` or `methods`")
 }

@@ -12,7 +12,6 @@ type (
 		sortedNamesValidator
 
 		comments *BreakComments
-		lastLine int
 	}
 )
 
@@ -33,7 +32,8 @@ func (f *FuncsValidator) Validate(v *ast.FuncDecl, fset *token.FileSet) error {
 		return err
 	}
 
-	if f.lastLine != 0 && f.comments.Next() > f.lastLine {
+	next := f.comments.Next()
+	if next != -1 && fset.PositionFor(v.Pos(), false).Line > next {
 		f.last = ""
 	}
 
@@ -41,8 +41,7 @@ func (f *FuncsValidator) Validate(v *ast.FuncDecl, fset *token.FileSet) error {
 		return err
 	}
 
-	f.lastLine = fset.PositionFor(v.End(), false).Line
-	f.comments.MoveTo(f.lastLine)
+	f.comments.MoveTo(fset.PositionFor(v.End(), false).Line)
 
 	return nil
 }
