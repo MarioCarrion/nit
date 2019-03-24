@@ -8,7 +8,7 @@ import (
 	"testing"
 )
 
-func newParserFile(t *testing.T, name string) (*ast.File, *token.FileSet, error) {
+func newParserFile(t *testing.T, name string) (*ast.File, *token.FileSet) {
 	t.Helper()
 
 	fset := token.NewFileSet()
@@ -17,5 +17,5 @@ func newParserFile(t *testing.T, name string) (*ast.File, *token.FileSet, error)
 		t.Fatalf("expected no error, got %s", err)
 	}
 
-	return f, fset, nil
+	return f, fset
 }

@@ -33,4 +33,5 @@ A really, really nitpicking linter that complains when the code is not organized
 
 ### Development
 
-Requires [`dep`](https://github.com/golang/dep), you can use [retool](https://github.com/twitchtv/retool) for installing that dependency.
+* Requires [`dep`](https://github.com/golang/dep), you can use [retool](https://github.com/twitchtv/retool) for installing that dependency.
+* [goenv](https://github.com/syndbg/goenv) is used for versioning Go.

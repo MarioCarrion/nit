@@ -50,7 +50,7 @@ func TestFuncsValidator_Validate(t *testing.T) {
 				fset *token.FileSet
 			)
 
-			f, fset, err = newParserFile(ts, tt.filename)
+			f, fset = newParserFile(ts, tt.filename)
 			if err != nil {
 				ts.Fatalf("expected no error, got %s", err)
 			}

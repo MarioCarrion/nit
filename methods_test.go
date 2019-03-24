@@ -69,10 +69,7 @@ func TestMethodsValidator_Validate(t *testing.T) {
 				validator  *nit.MethodsValidator
 			)
 
-			f, fset, err = newParserFile(ts, tt.filename)
-			if err != nil {
-				ts.Fatalf("expected no error, got %s", err)
-			}
+			f, fset = newParserFile(ts, tt.filename)
 
 			comments := nit.NewBreakComments(fset, f.Comments)
 

@@ -17,7 +17,16 @@ jobs:
       - checkout
       - run: go build github.com/MarioCarrion/nit/testdata
       - run: go build github.com/MarioCarrion/nit/cmd/nit
-  lint:
+  golint:
+    docker:
+      - image: golangci/golangci-lint:v1.15
+    working_directory: /go/src/github.com/MarioCarrion/nit
+    environment:
+      CGO_ENABLED: 0
+    steps:
+      - checkout
+      - run: golangci-lint run ./...
+  nitlint:
     docker:
       - image: mariocarrion/nit:v0.1.1
     working_directory: /go/src/github.com/MarioCarrion/nit
@@ -41,7 +50,8 @@ workflows:
     jobs:
       - test
       - build
-      - lint
+      - golint
+      - nitlint
   release:
     jobs:
       - release:

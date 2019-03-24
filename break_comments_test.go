@@ -23,10 +23,7 @@ func TestBreakComments(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(ts *testing.T) {
-			f, fset, err := newParserFile(ts, tt.filename)
-			if err != nil {
-				ts.Fatalf("expected no error, got %s", err)
-			}
+			f, fset := newParserFile(ts, tt.filename)
 
 			var actual []int
 

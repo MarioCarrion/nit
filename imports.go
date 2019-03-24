@@ -197,7 +197,7 @@ func (externalImportsTransition) Local() (ImportsTransition, error) {
 }
 
 func (externalImportsTransition) Standard() (ImportsTransition, error) {
-	return nil, errors.New("standard imports is invalid, next one must be external or local.")
+	return nil, errors.New("standard imports is invalid, next one must be external or local")
 }
 
 //-
