@@ -3,7 +3,7 @@ version: 2
 jobs:
   test:
     docker:
-      - image: circleci/golang:1.11.2
+      - image: circleci/golang:1.11.4
     working_directory: /go/src/github.com/MarioCarrion/nit
     steps:
       - checkout
@@ -11,7 +11,7 @@ jobs:
       - run: go test -v ./...
   build:
     docker:
-      - image: circleci/golang:1.11.2
+      - image: circleci/golang:1.11.4
     working_directory: /go/src/github.com/MarioCarrion/nit
     steps:
       - checkout
@@ -28,17 +28,17 @@ jobs:
       - run: golangci-lint run ./...
   nitlint:
     docker:
-      - image: mariocarrion/nit:v0.1.1
+      - image: circleci/golang:1.11.4
     working_directory: /go/src/github.com/MarioCarrion/nit
     environment:
       CGO_ENABLED: 0
     steps:
       - checkout
       - run: go install github.com/MarioCarrion/nit/cmd/nit
-      - run: gometalinter --enable-all --config=.gometalinter.json ./...
+      - run: nit -pkg github.com/MarioCarrion/nit github.com/MarioCarrion/nit github.com/MarioCarrion/nit/cmd/nit
   release:
     docker:
-      - image: circleci/golang:1.11.2
+      - image: circleci/golang:1.11.4
     working_directory: /go/src/github.com/MarioCarrion/nit
     steps:
       - checkout
