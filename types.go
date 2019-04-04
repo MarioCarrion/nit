@@ -12,9 +12,15 @@ type (
 	// the `type` sections.
 	TypesValidator struct {
 		sortedNamesValidator
-		types []string
+		comments *BreakComments
+		types    []string
 	}
 )
+
+// NewTypesValidator returns a correctly initialized TypesValidator.
+func NewTypesValidator(c *BreakComments) *TypesValidator {
+	return &TypesValidator{comments: c}
+}
 
 // Types returns the names of all found types.
 func (tv *TypesValidator) Types() []string {
@@ -43,9 +49,20 @@ func (tv *TypesValidator) Validate(v *ast.GenDecl, fset *token.FileSet) error { 
 			return errors.Wrap(errors.Errorf("invalid token %+v", t), errPrefix)
 		}
 
-		if err := tv.validateName(errPrefix, s.Name); err != nil {
+		if err := tv.validateExported(errPrefix, s.Name); err != nil {
 			return err
 		}
+
+		next := tv.comments.Next()
+		if next != -1 && fset.PositionFor(s.Pos(), false).Line > next {
+			tv.last = ""
+		}
+
+		if err := tv.validateSortedName(errPrefix, s.Name); err != nil {
+			return err
+		}
+
+		tv.comments.MoveTo(fset.PositionFor(s.End(), false).Line)
 
 		tv.types = append(tv.types, s.Name.Name)
 	}

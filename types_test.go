@@ -21,6 +21,11 @@ func TestTypesValidator_Validate(t *testing.T) {
 			false,
 		},
 		{
+			"OK: group",
+			"types_group3.go",
+			false,
+		},
+		{
 			"Error: parenthesized declaration",
 			"types_paren.go",
 			true,
@@ -40,17 +45,24 @@ func TestTypesValidator_Validate(t *testing.T) {
 			"types_sorted.go",
 			true,
 		},
+		{
+			"Error: group 4",
+			"types_group4.go",
+			true,
+		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(ts *testing.T) {
 			f, fset := newParserFile(ts, tt.filename)
 
+			comments := nit.NewBreakComments(fset, f.Comments)
+			validator := nit.NewTypesValidator(comments)
+
 			for _, s := range f.Decls {
 				switch g := s.(type) {
 				case *ast.GenDecl:
 					if g.Tok == token.TYPE {
-						validator := nit.TypesValidator{}
 						if err := validator.Validate(g, fset); tt.expectedError != (err != nil) {
 							ts.Fatalf("expected error %t, got %s", tt.expectedError, err)
 						}

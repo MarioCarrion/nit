@@ -91,7 +91,7 @@ func (v *Nitpicker) validateToken(d ast.Decl) error {
 		if v.tvalidator != nil {
 			return errors.New("only one `type` section block is allowed per file")
 		}
-		v.tvalidator = &TypesValidator{}
+		v.tvalidator = NewTypesValidator(v.comments)
 		if err := v.tvalidator.Validate(genDecl, v.fset); err != nil {
 			return err
 		}

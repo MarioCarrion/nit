@@ -81,7 +81,7 @@ func TestMethodsValidator_Validate(t *testing.T) {
 						ts.Fatalf("expected no error, got %s", err1)
 					}
 					if section == nit.FileSectionTypes {
-						tvalidator = &nit.TypesValidator{}
+						tvalidator = nit.NewTypesValidator(comments)
 						if err1 := tvalidator.Validate(g, fset); err1 != nil {
 							ts.Fatalf("expected no error, got %s", err1)
 						}
