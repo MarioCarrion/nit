@@ -11,7 +11,9 @@ import (
 type (
 	// Nitpicker defines the linter.
 	Nitpicker struct {
-		LocalPath  string
+		LocalPath         string
+		SkipGeneratedFile bool
+		//-
 		fset       *token.FileSet
 		fsm        *FileSectionMachine
 		comments   *BreakComments
@@ -30,6 +32,9 @@ func (v *Nitpicker) Validate(filename string) error {
 	}
 
 	v.comments = NewBreakComments(v.fset, f.Comments)
+	if v.comments.HasGeneratedCode() && v.SkipGeneratedFile {
+		return nil
+	}
 
 	for _, s := range f.Decls {
 		// fmt.Printf("%d == %T - %+v -- %t\n", v.fset.PositionFor(s.Pos(), false).Line, s, s, s.End().IsValid())

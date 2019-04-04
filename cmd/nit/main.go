@@ -27,17 +27,19 @@ func main() {
 	//-
 
 	localPkg := flag.String("pkg", "", "local package")
+	skipGenerated := flag.Bool("skip-generated", false, "skip generated files")
 	showVersion := flag.Bool("version", false, "prints current version information")
 
 	flag.Parse()
 
 	if *showVersion {
-		fmt.Printf("%v, commit %v, built at %v", version, commit, date)
+		fmt.Printf("%v, commit %v, built at %v\n", version, commit, date)
 		os.Exit(0)
 	}
 
 	if len(flag.Args()) == 0 {
-		fmt.Println("missing packages")
+		fmt.Println("missing `pkg` argument.")
+		flag.Usage()
 		os.Exit(1)
 	}
 
@@ -52,7 +54,10 @@ func main() {
 
 		for _, f := range p.GoFiles {
 			fullpath := filepath.Join(p.Dir, f)
-			v := nit.Nitpicker{LocalPath: *localPkg}
+			v := nit.Nitpicker{
+				LocalPath:         *localPkg,
+				SkipGeneratedFile: *skipGenerated,
+			}
 			if err := v.Validate(fullpath); err != nil {
 				failed = true
 				fmt.Println(err)

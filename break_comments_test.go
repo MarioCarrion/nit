@@ -10,14 +10,22 @@ import (
 
 func TestBreakComments(t *testing.T) {
 	tests := [...]struct {
-		name     string
-		filename string
-		expected []int
+		name                  string
+		filename              string
+		expected              []int
+		expectedCodegenerated bool
 	}{
 		{
 			"OK",
 			"break_comments1.go",
 			[]int{8, 13, 19},
+			false,
+		},
+		{
+			"OK: code generated",
+			"break_comments2.go",
+			nil,
+			true,
 		},
 	}
 
@@ -39,6 +47,9 @@ func TestBreakComments(t *testing.T) {
 
 			if !cmp.Equal(tt.expected, actual) {
 				ts.Errorf("expected values do not match: %s", cmp.Diff(tt.expected, actual))
+			}
+			if tt.expectedCodegenerated != bc.HasGeneratedCode() {
+				ts.Errorf("expected %t, got %t", tt.expectedCodegenerated, bc.HasGeneratedCode())
 			}
 		})
 	}
