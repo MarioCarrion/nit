@@ -39,7 +39,7 @@ Fancy State Machine explaining the rules above:
 ## Installing
 
 * Using `go` (< 11.1): `go install github.com/MarioCarrion/nit/cmd/nit` **or** download a precompiled release.
-* Using `go` (>= 1.11): `GO111MODULE=on go get github.com/MarioCarrion/nit/cmd/nit@v0.5.0`, for installing v0.5.0 for example; see the releases for other versions.
+* Using `go` (>= 1.11): `GO111MODULE=on go get github.com/MarioCarrion/nit/cmd/nit@v0.6.0`, for installing v0.6.0 for example; see the releases for other versions.
 * Using `retool`: `retool add github.com/MarioCarrion/nit/cmd/nit v0.5.0`, for installing v0.5.0 for example; see the releases for other versions.
 
 ## Using
