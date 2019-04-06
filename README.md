@@ -4,34 +4,57 @@
 [![Circle CI](https://circleci.com/gh/MarioCarrion/nit.svg?style=svg)](https://circleci.com/gh/MarioCarrion/nit)
 [![coverage](https://gocover.io/_badge/github.com/MarioCarrion/nit?0 "coverage")](http://gocover.io/github.com/MarioCarrion/nit)
 
-I'm nitpicking your code.
+`nit` is an opinionated Code Organization linter for Go.
 
-## What is this?
+It defines a collection of rules to determine how each Go file should be organized internally.
 
-A really, really nitpicking linter that complains when the code is not organized according to the following very opinionated rules:
+## Rules
 
 1. [X] `imports` is the first section
    - [X] Requires parenthesized declaration,
-   - [X] One maximum,
+   - [X] One maximum, and
    - [X] Separated in 3 blocks: standard, external and same package (local).
 1. [X] `type` is the second section
    - [X] Requires parenthesized declaration,
-   - [X] Section must be sorted: exported first, then unexported.
+   - [X] Section must be sorted: exported first, then unexported; and
+   - [X] Supports `//-` comment for separating groups
 1. [X] `const` is the third section
    - [X] Requires parenthesized declaration,
-   - [X] Multiple allowed,
+   - [X] Multiple allowed, and
    - [X] Section must be sorted: exported first, then unexported.
 1. [X] `var` is the fourth section
-   - [X] Requires parenthesized declaration,
+   - [X] Requires parenthesized declaration, and
    - [X] Section must be sorted: exported first, then unexported.
 1. [X] `func` is the fifth section
-   - [X] Must be sorted, exported first, then unexported.
+   - [X] Must be sorted, exported first, then unexported, and
+   - [X] Supports `//-` comment for separating groups.
 1. [X] `func` method, is the sixth section
-   - [X] Must be sorted by type, exported first, then unexported.
+   - [X] Must be sorted by type, exported first, then unexported; and
+   - [X] Supports `//-` comment for separating groups.
+
+Fancy State Machine explaining the rules above:
 
 ![code](code.png "code organization in file")
 
-### Development
+## Installing
 
-* Requires [`dep`](https://github.com/golang/dep), you can use [retool](https://github.com/twitchtv/retool) for installing that dependency.
+* Using `go` (< 11.1): `go install github.com/MarioCarrion/nit/cmd/nit` **or** download a precompiled release.
+* Using `go` (>= 1.11): `GO111MODULE=on go get github.com/MarioCarrion/nit/cmd/nit@v0.5.0`, for installing v0.5.0 for example; see the releases for other versions.
+* Using `retool`: `retool add github.com/MarioCarrion/nit/cmd/nit v0.5.0`, for installing v0.5.0 for example; see the releases for other versions.
+
+## Using
+
+After installing you can use:
+
+```
+nit -pkg <base local package> $(go list ./...)
+```
+
+Please use `nit -h` for other available arguments.
+
+## Development
+
+* Go < 1.11: requires [`dep`](https://github.com/golang/dep), you can use [retool](https://github.com/twitchtv/retool) for installing that dependency.
+* Go >= 1.11: `GO111MODULE=on go mod download`
 * [goenv](https://github.com/syndbg/goenv) is used for versioning Go.
+

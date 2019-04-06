@@ -9,6 +9,15 @@ jobs:
       - checkout
       - run: go get -v -t -d ./...
       - run: go test -v ./...
+  test-gomodules:
+    docker:
+      - image: circleci/golang:1.11.4
+    working_directory: ~/github.com/MarioCarrion/nit
+    steps:
+      - checkout
+      - run: GO111MODULE=on go mod download
+      - run: GO111MODULE=on go get -v -t -d ./...
+      - run: GO111MODULE=on go test -v ./...
   build:
     docker:
       - image: circleci/golang:1.11.4
@@ -17,6 +26,15 @@ jobs:
       - checkout
       - run: go build github.com/MarioCarrion/nit/testdata
       - run: go build github.com/MarioCarrion/nit/cmd/nit
+  build-gomodules:
+    docker:
+      - image: circleci/golang:1.11.4
+    working_directory: ~/github.com/MarioCarrion/nit
+    steps:
+      - checkout
+      - run: GO111MODULE=on go mod download
+      - run: GO111MODULE=on go build github.com/MarioCarrion/nit/testdata
+      - run: GO111MODULE=on go build github.com/MarioCarrion/nit/cmd/nit
   golint:
     docker:
       - image: golangci/golangci-lint:v1.15
@@ -49,7 +67,9 @@ workflows:
   test_and_lint:
     jobs:
       - test
+      - test-gomodules
       - build
+      - build-gomodules
       - golint
       - nitlint
   release:
