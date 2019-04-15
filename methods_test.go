@@ -31,6 +31,11 @@ func TestMethodsValidator_Validate(t *testing.T) {
 			false,
 		},
 		{
+			"OK: sorted exported/unexported",
+			"methods_sorted_unexported_ok.go",
+			false,
+		},
+		{
 			"Error: not defined in file",
 			"methods_not_defined.go",
 			true,

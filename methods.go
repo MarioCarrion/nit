@@ -81,6 +81,7 @@ func (m *MethodsValidator) Validate(v *ast.FuncDecl, fset *token.FileSet) error 
 
 	if m.lastType != rcvType.Name {
 		m.sortedTypes.identType = "Type"
+		m.sortedMethods = sortedNamesValidator{}
 		if err := validateSorted(&m.sortedTypes, rcvType, false); err != nil {
 			return err
 		}
