@@ -37,7 +37,6 @@ func (v *Nitpicker) Validate(filename string) error {
 	}
 
 	for _, s := range f.Decls {
-		// fmt.Printf("%d == %T - %+v -- %t\n", v.fset.PositionFor(s.Pos(), false).Line, s, s, s.End().IsValid())
 		if err := v.validateToken(s); err != nil {
 			return err
 		}

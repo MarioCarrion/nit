@@ -44,6 +44,8 @@ func TestNewImportsSection(t *testing.T) {
 	}
 }
 
+//-
+
 //nolint:dupl
 func TestImportsValidator(t *testing.T) {
 	tests := [...]struct {
@@ -98,6 +100,8 @@ func TestImportsValidator(t *testing.T) {
 	}
 }
 
+//-
+
 func TestNewImportsTransition(t *testing.T) {
 	tests := [...]struct {
 		name          string
@@ -135,6 +139,8 @@ func TestNewImportsTransition(t *testing.T) {
 		})
 	}
 }
+
+//-
 
 func TestImportsTransitionExternal(t *testing.T) {
 	i, _ := nit.NewImportsTransition(nit.ImportsSectionExternal)

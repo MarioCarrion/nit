@@ -6,6 +6,7 @@ import (
 	"go/build"
 	"os"
 	"path/filepath"
+	"strings"
 
 	"github.com/MarioCarrion/nit"
 )
@@ -28,6 +29,7 @@ func main() {
 
 	localPkg := flag.String("pkg", "", "local package")
 	skipGenerated := flag.Bool("skip-generated", false, "skip generated files")
+	includeTests := flag.Bool("include-tests", false, "include test files")
 	showVersion := flag.Bool("version", false, "prints current version information")
 
 	flag.Parse()
@@ -45,6 +47,24 @@ func main() {
 
 	var failed bool
 
+	nitpick := func(files []string) {
+		for _, f := range files {
+			if strings.HasSuffix(f, "_test.go") && !*includeTests {
+				continue
+			}
+
+			v := nit.Nitpicker{
+				LocalPath:         *localPkg,
+				SkipGeneratedFile: *skipGenerated,
+			}
+
+			if err := v.Validate(f); err != nil {
+				failed = true
+				fmt.Println(err)
+			}
+		}
+	}
+
 	for _, pkg := range flag.Args() {
 		p, err := build.Import(pkg, ".", 0)
 		if err != nil {
@@ -52,17 +72,8 @@ func main() {
 			os.Exit(1)
 		}
 
-		for _, f := range p.GoFiles {
-			fullpath := filepath.Join(p.Dir, f)
-			v := nit.Nitpicker{
-				LocalPath:         *localPkg,
-				SkipGeneratedFile: *skipGenerated,
-			}
-			if err := v.Validate(fullpath); err != nil {
-				failed = true
-				fmt.Println(err)
-			}
-		}
+		gofiles, _ := filepath.Glob(filepath.Join(p.Dir, "*.go"))
+		nitpick(gofiles)
 	}
 
 	if failed {

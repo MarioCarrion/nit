@@ -20,6 +20,8 @@ func TestNewFileSectionTransition(t *testing.T) {
 	}
 }
 
+//-
+
 func TestFileSectionMachine(t *testing.T) {
 	s := nit.FileSectionMachine{}
 
