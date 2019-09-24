@@ -35,7 +35,12 @@ func (c *ConstsValidator) Validate(v *ast.GenDecl, fset *token.FileSet) error { 
 		}
 
 		for _, vss := range s.Values {
-			_, ok := vss.(*ast.Ident)
+			bexpr, ok := vss.(*ast.BinaryExpr)
+			if ok {
+				vss = bexpr.Y
+			}
+
+			_, ok = vss.(*ast.Ident)
 			if ok {
 				return nil // iota
 			}
