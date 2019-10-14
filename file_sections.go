@@ -67,6 +67,7 @@ func NewFileSectionMachine(start FileSection) (*FileSectionMachine, error) {
 	if err != nil {
 		return nil, err
 	}
+
 	return &FileSectionMachine{current: c}, nil
 }
 
@@ -96,6 +97,7 @@ func NewFuncDeclFileSection(decl *ast.FuncDecl) (FileSection, error) {
 	if decl.Recv == nil {
 		return FileSectionFuncs, nil
 	}
+
 	return FileSectionMethods, nil
 }
 
@@ -138,11 +140,13 @@ func (v *FileSectionMachine) Transition(next FileSection) error { //nolint:gocyc
 	default:
 		err = errors.Errorf("invalid file section value: %d", next)
 	}
+
 	if err != nil {
 		return err
 	}
 
 	v.current = res
+
 	return nil
 }
 

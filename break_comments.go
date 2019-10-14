@@ -41,6 +41,7 @@ func NewBreakComments(fset *token.FileSet, comments []*ast.CommentGroup) *BreakC
 			}
 		}
 	}
+
 	return &r
 }
 
@@ -69,5 +70,6 @@ func (c *BreakComments) Next() int {
 	if c.index >= len(c.comments) {
 		return -1
 	}
+
 	return c.comments[c.index]
 }

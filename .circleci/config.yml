@@ -3,61 +3,32 @@ version: 2
 jobs:
   test:
     docker:
-      - image: circleci/golang:1.11.4
-    working_directory: /go/src/github.com/MarioCarrion/nit
+      - image: circleci/golang:1.13.1
     steps:
       - checkout
+      - run: go mod download
       - run: go get -v -t -d ./...
       - run: go test -v ./...
-  test-gomodules:
-    docker:
-      - image: circleci/golang:1.11.4
-    working_directory: ~/github.com/MarioCarrion/nit
-    steps:
-      - checkout
-      - run: GO111MODULE=on go mod download
-      - run: GO111MODULE=on go get -v -t -d ./...
-      - run: GO111MODULE=on go test -v ./...
   build:
     docker:
-      - image: circleci/golang:1.11.4
-    working_directory: /go/src/github.com/MarioCarrion/nit
+      - image: circleci/golang:1.13.1
     steps:
       - checkout
       - run: go build github.com/MarioCarrion/nit/testdata
       - run: go build github.com/MarioCarrion/nit/cmd/nit
-  build-gomodules:
+  lint:
     docker:
-      - image: circleci/golang:1.11.4
-    working_directory: ~/github.com/MarioCarrion/nit
+      - image: circleci/golang:1.13.1
     steps:
       - checkout
-      - run: GO111MODULE=on go mod download
-      - run: GO111MODULE=on go build github.com/MarioCarrion/nit/testdata
-      - run: GO111MODULE=on go build github.com/MarioCarrion/nit/cmd/nit
-  golint:
-    docker:
-      - image: golangci/golangci-lint:v1.15
-    working_directory: /go/src/github.com/MarioCarrion/nit
-    environment:
-      CGO_ENABLED: 0
-    steps:
-      - checkout
+      - run: go mod tidy
+      - run: go install github.com/golangci/golangci-lint/cmd/golangci-lint
       - run: golangci-lint run ./...
-  nitlint:
-    docker:
-      - image: circleci/golang:1.11.4
-    working_directory: /go/src/github.com/MarioCarrion/nit
-    environment:
-      CGO_ENABLED: 0
-    steps:
-      - checkout
       - run: go install github.com/MarioCarrion/nit/cmd/nit
       - run: nit -pkg github.com/MarioCarrion/nit github.com/MarioCarrion/nit github.com/MarioCarrion/nit/cmd/nit
   release:
     docker:
-      - image: circleci/golang:1.11.4
-    working_directory: /go/src/github.com/MarioCarrion/nit
+      - image: circleci/golang:1.13.1
     steps:
       - checkout
       - run: curl -sL https://git.io/goreleaser | bash
@@ -67,11 +38,8 @@ workflows:
   test_and_lint:
     jobs:
       - test
-      - test-gomodules
       - build
-      - build-gomodules
-      - golint
-      - nitlint
+      - lint
   release:
     jobs:
       - release:

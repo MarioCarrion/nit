@@ -18,6 +18,7 @@ var (
 	version = "dev"
 )
 
+//nolint: funlen
 func main() {
 	//nolint: errcheck
 	flag.Usage = func() {
@@ -60,6 +61,7 @@ func main() {
 
 			if err := v.Validate(f); err != nil {
 				failed = true
+
 				fmt.Println(err)
 			}
 		}

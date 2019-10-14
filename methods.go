@@ -55,6 +55,7 @@ func (m *MethodsValidator) Validate(v *ast.FuncDecl, fset *token.FileSet) error 
 	}
 
 	errPrefix := fset.PositionFor(v.Pos(), false).String()
+
 	if _, ok := m.types[rcvType.Name]; !ok {
 		return errors.Wrap(errors.Errorf("Type `%s` is not defined in the file", rcvType.Name), errPrefix)
 	}
@@ -82,9 +83,11 @@ func (m *MethodsValidator) Validate(v *ast.FuncDecl, fset *token.FileSet) error 
 	if m.lastType != rcvType.Name {
 		m.sortedTypes.identType = "Type"
 		m.sortedMethods = sortedNamesValidator{}
+
 		if err := validateSorted(&m.sortedTypes, rcvType, false); err != nil {
 			return err
 		}
+
 		m.lastType = rcvType.Name
 	}
 

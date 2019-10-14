@@ -40,7 +40,19 @@ Fancy State Machine explaining the rules above:
 
 * Using `go` (< 11.1): `go install github.com/MarioCarrion/nit/cmd/nit` **or** download a precompiled release.
 * Using `go` (>= 1.11): `GO111MODULE=on go get github.com/MarioCarrion/nit/cmd/nit@v0.6.0`, for installing v0.6.0 for example; see the releases for other versions.
-* Using `retool`: `retool add github.com/MarioCarrion/nit/cmd/nit v0.5.0`, for installing v0.5.0 for example; see the releases for other versions.
+* Using it as a depency with the [`tools.go` paradigm](https://github.com/go-modules-by-example/index/blob/master/010_tools/README.md):
+
+```go
+// +build tools
+
+// tools.go content
+
+package tools
+
+import (
+	_ "github.com/go-swagger/go-swagger/cmd/swagger"
+)
+```
 
 ## Using
 
@@ -52,9 +64,6 @@ nit -pkg <base local package> $(go list ./...)
 
 Please use `nit -h` for other available arguments.
 
-## Development
+## Development requirements
 
-* Go < 1.11: requires [`dep`](https://github.com/golang/dep), you can use [retool](https://github.com/twitchtv/retool) for installing that dependency.
-* Go >= 1.11: `GO111MODULE=on go mod download`
-* [goenv](https://github.com/syndbg/goenv) is used for versioning Go.
-
+Go >= 1.13.1

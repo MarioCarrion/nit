@@ -13,6 +13,7 @@ func newParserFile(t *testing.T, name string) (*ast.File, *token.FileSet) {
 
 	fset := token.NewFileSet()
 	f, err := parser.ParseFile(fset, filepath.Join("testdata", name), nil, parser.ParseComments)
+
 	if err != nil {
 		t.Fatalf("expected no error, got %s", err)
 	}

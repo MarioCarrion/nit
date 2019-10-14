@@ -27,6 +27,7 @@ type (
 func (v *Nitpicker) Validate(filename string) error {
 	v.fset = token.NewFileSet()
 	f, err := parser.ParseFile(v.fset, filename, nil, parser.ParseComments)
+
 	if err != nil {
 		return errors.Wrap(err, "parsing file failed")
 	}
@@ -45,7 +46,7 @@ func (v *Nitpicker) Validate(filename string) error {
 	return nil
 }
 
-//nolint:gocyclo
+//nolint:gocyclo,funlen
 func (v *Nitpicker) validateToken(d ast.Decl) error {
 	var (
 		err       error
@@ -64,6 +65,7 @@ func (v *Nitpicker) validateToken(d ast.Decl) error {
 	default:
 		return errors.New("unknown declaration state")
 	}
+
 	if err != nil {
 		return err
 	}
@@ -73,6 +75,7 @@ func (v *Nitpicker) validateToken(d ast.Decl) error {
 		if err != nil {
 			return errors.Wrap(err, v.fset.PositionFor(d.Pos(), false).String())
 		}
+
 		v.fsm = fsm
 	}
 
@@ -90,7 +93,9 @@ func (v *Nitpicker) validateToken(d ast.Decl) error {
 		if v.tvalidator != nil {
 			return errors.New("only one `type` section block is allowed per file")
 		}
+
 		v.tvalidator = NewTypesValidator(v.comments)
+
 		if err := v.tvalidator.Validate(genDecl, v.fset); err != nil {
 			return err
 		}
@@ -108,6 +113,7 @@ func (v *Nitpicker) validateToken(d ast.Decl) error {
 		if v.fvalidator == nil {
 			v.fvalidator = NewFuncsValidator(v.comments)
 		}
+
 		if err := v.fvalidator.Validate(funcDecl, v.fset); err != nil {
 			return err
 		}
@@ -117,8 +123,10 @@ func (v *Nitpicker) validateToken(d ast.Decl) error {
 			if err != nil {
 				return err
 			}
+
 			v.mvalidator = mvalidator
 		}
+
 		if err := v.mvalidator.Validate(funcDecl, v.fset); err != nil {
 			return err
 		}

@@ -57,9 +57,11 @@ func NewImportsSection(path, localPathPrefix string) ImportsSection {
 	if !strings.Contains(path, ".") {
 		return ImportsSectionStd
 	}
+
 	if strings.HasPrefix(strings.Replace(path, "\"", "", -1), localPathPrefix) {
 		return ImportsSectionLocal
 	}
+
 	return ImportsSectionExternal
 }
 
@@ -71,6 +73,7 @@ func NewImportsSectionMachine(start ImportsSection) (*ImportsSectionMachine, err
 	if err != nil {
 		return nil, err
 	}
+
 	return &ImportsSectionMachine{current: c}, nil
 }
 
@@ -85,6 +88,7 @@ func NewImportsTransition(s ImportsSection) (ImportsTransition, error) {
 	case ImportsSectionLocal:
 		return localImportsTransition{}, nil
 	}
+
 	return nil, errors.New("invalid imports value")
 }
 
@@ -123,12 +127,14 @@ func (s *ImportsSectionMachine) Transition(next ImportsSection) error {
 	default:
 		err = errors.Errorf("invalid imports value: %d", next)
 	}
+
 	if err != nil {
 		return err
 	}
 
 	s.previous = s.current
 	s.current = res
+
 	return nil
 }
 
@@ -157,13 +163,16 @@ func (i *ImportsValidator) Validate(v *ast.GenDecl, fset *token.FileSet) error {
 		}
 
 		section := NewImportsSection(s.Path.Value, i.localPath)
+
 		if i.fsm == nil {
 			fsm, err := NewImportsSectionMachine(section)
 			if err != nil {
 				return errors.Wrap(errors.Errorf("invalid imports found: %s", err), errPrefix)
 			}
+
 			i.fsm = fsm
 		}
+
 		if err := i.fsm.Transition(section); err != nil {
 			return errors.Wrap(err, errPrefix)
 		}

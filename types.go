@@ -26,6 +26,7 @@ func NewTypesValidator(c *BreakComments) *TypesValidator {
 func (tv *TypesValidator) Types() []string {
 	dst := make([]string, len(tv.types))
 	copy(dst, tv.types)
+
 	return dst
 }
 

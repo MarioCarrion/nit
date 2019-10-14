@@ -47,5 +47,6 @@ func (v *sortedNamesValidator) validateSortedName(errPrefix string, name *ast.Id
 	}
 
 	v.last = name.Name
+
 	return nil
 }
