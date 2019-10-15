@@ -30,6 +30,7 @@ func main() {
 
 	localPkg := flag.String("pkg", "", "local package")
 	skipGenerated := flag.Bool("skip-generated", false, "skip generated files")
+	nolint := flag.Bool("nolint", false, "enable nolint directive")
 	includeTests := flag.Bool("include-tests", false, "include test files")
 	showVersion := flag.Bool("version", false, "prints current version information")
 
@@ -57,6 +58,7 @@ func main() {
 			v := nit.Nitpicker{
 				LocalPath:         *localPkg,
 				SkipGeneratedFile: *skipGenerated,
+				NoLint:            *nolint,
 			}
 
 			if err := v.Validate(f); err != nil {

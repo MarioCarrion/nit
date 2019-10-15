@@ -13,6 +13,7 @@ type (
 	Nitpicker struct {
 		LocalPath         string
 		SkipGeneratedFile bool
+		NoLint            bool
 		//-
 		fset       *token.FileSet
 		fsm        *FileSectionMachine
@@ -34,6 +35,10 @@ func (v *Nitpicker) Validate(filename string) error {
 
 	v.comments = NewBreakComments(v.fset, f.Comments)
 	if v.comments.HasGeneratedCode() && v.SkipGeneratedFile {
+		return nil
+	}
+
+	if v.comments.HasNoLintNit() && v.NoLint {
 		return nil
 	}
 

@@ -13,24 +13,31 @@ type (
 		index         int
 		comments      []int
 		generatedFile bool
+		nolintNit     bool
 	}
 )
 
 const (
 	breakComment  = "//-"
 	generatedFile = `^// Code generated .* DO NOT EDIT\.$`
+	nitLinter     = "^//nolint:nit$"
 )
 
 // NewBreakComments returns all the valid break-like comments.
 func NewBreakComments(fset *token.FileSet, comments []*ast.CommentGroup) *BreakComments {
 	r := BreakComments{}
 
-	re, _ := regexp.Compile(generatedFile)
+	regen, _ := regexp.Compile(generatedFile)
+	renit, _ := regexp.Compile(nitLinter)
 
 	for _, c := range comments {
 		for _, c1 := range c.List {
-			if re.MatchString(c1.Text) {
+			if regen.MatchString(c1.Text) {
 				r.generatedFile = true
+			}
+
+			if renit.MatchString(c1.Text) {
+				r.nolintNit = true
 			}
 
 			if strings.HasPrefix(c1.Text, breakComment) {
@@ -49,6 +56,12 @@ func NewBreakComments(fset *token.FileSet, comments []*ast.CommentGroup) *BreakC
 // generated expression".
 func (c *BreakComments) HasGeneratedCode() bool {
 	return c.generatedFile
+}
+
+// HasNoLintNit indicates whether the current file contains a "do not lint nit"
+// expression.
+func (c *BreakComments) HasNoLintNit() bool {
+	return c.nolintNit
 }
 
 // Moves current line cursor to the received line.
