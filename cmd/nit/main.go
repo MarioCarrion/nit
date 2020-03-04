@@ -72,7 +72,7 @@ func main() {
 	for _, pkg := range flag.Args() {
 		p, err := build.Import(pkg, ".", 0)
 		if err != nil {
-			fmt.Printf("error importing %s\n", pkg)
+			fmt.Printf("error importing %s: %s\n", pkg, err)
 			os.Exit(1)
 		}
 
